@@ -8,6 +8,8 @@ import 'package:flight_booking_app/widgets/toggle_buttom.dart';
 import 'package:flight_booking_app/widgets/xen_popup_card.dart';
 import 'package:flutter/material.dart';
 
+import '../models/flight_search_data.dart';
+
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -16,7 +18,47 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   bool isRoundTrip = false; 
+  TextEditingController _departureController = TextEditingController();
+  TextEditingController _arrivalController = TextEditingController();
+  TextEditingController _adultCountController = TextEditingController(text: '1');
+  TextEditingController _kidCountController = TextEditingController(text: '0');
+  TextEditingController _babyCountController = TextEditingController(text: '0');
 
+  void _navigateToResultPage() { // send data to class flight_search_data
+  // ?? = defualt value
+  String departure = _departureController.text ?? '';
+  String arrival = _arrivalController.text ?? '';
+  String adultCount = _adultCountController.text ?? '1';
+  String kidCount = _kidCountController.text ?? '0';
+  String babyCount = _babyCountController.text ?? '0';
+
+  FlightSearchData searchData = FlightSearchData( // collect data  in flightSearchData
+    departure: departure,
+    arrival: arrival,
+    adultCount: adultCount,
+    kidCount: kidCount,
+    babyCount: babyCount,
+    // isEconomicClass: _isSelectedClass[0],
+    // isPremiumEconomicClass: _isSelectedClass[1],
+    // isBusinessClass: _isSelectedClass[2],
+    // isFirstClass: _isSelectedClass[3],
+    // if true = ?
+    // false = :
+    // selectedDate: _isSelected[0]
+    //     ? _singleDatePickerValueWithDefaultValue[0] // pick one day
+    //     : null,
+    // selectedRange: _isSelected[1]
+    //     ? _rangeDatePickerWithActionButtonsWithValue // pick range of days
+    //     : [null, null],//first , last
+  );
+
+  // Navigator.push(
+  //   context,
+  //   MaterialPageRoute(
+  //     builder: (context) => ResultPage(searchData: searchData), // send data to result page
+  //   ),
+  // );
+}
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -28,6 +70,12 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Text _buildDepartureText() {
+  final departureText = _departureController.text.isNotEmpty
+    ? _departureController.text
+    : 'Departure';
+  return Text(departureText);
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    child: Container( // buttom toggle
+                    child: Container( // white box
                       width: 430,
                       height: 612,
                       decoration: BoxDecoration(
@@ -123,15 +171,25 @@ class _HomePageState extends State<HomePage> {
                                       children: [
                                         Icon(Icons.flight_takeoff),
                                         SizedBox(width: 10,height: 50,), 
-                                        Text('Departure'),
+                                        Builder(
+                                          builder: (context) {
+                                            final departureText = _departureController.text.isNotEmpty
+                                                ? _departureController.text
+                                                : 'Departure';
+                                            return Text(departureText);
+                                          },
+                                        ),
                                       ],
                                     ),
-                                    onPressed: () => showDialog(
-                                      context: context, 
-                                      builder: (builder) => XenPopupCard(
-                                        body: SearchFlightPopUp(),)
-                                        
-                                      ),
+                                    onPressed: () async {
+                                      await showDialog(
+                                        context: context,
+                                        builder: (builder) => XenPopupCard(
+                                          body: SearchFlightPopUp(controller: _departureController),
+                                        ),
+                                      );
+                                      setState(() {});
+                                    },
                                   ),
                                 ),
                                 Row( // text to
@@ -176,15 +234,27 @@ class _HomePageState extends State<HomePage> {
                                       children: [
                                         Icon(Icons.flight_land),
                                         SizedBox(width: 10 , height: 50,), 
-                                        Text('Arrival'),
+                                         Builder(
+                                          builder: (context) {
+                                            final arrivalText = _arrivalController.text.isNotEmpty
+                                                ? _arrivalController.text
+                                                : 'Arrival';
+                                            return Text(arrivalText);
+                                          },
+                                        ),
+                                        
+                        
                                       ],
                                     ),
-                                    onPressed: () => showDialog(
-                                      context: context, 
-                                      builder: (builder) => XenPopupCard(
-                                        body: SearchFlightPopUp(),)
-                                        
-                                      ),
+                                    onPressed: () async {
+                                      await showDialog(
+                                        context: context,
+                                        builder: (builder) => XenPopupCard(
+                                          body: SearchFlightPopUp(controller: _arrivalController),
+                                        ),
+                                      );
+                                      setState(() {});
+                                    },
                                   ),
                                 ),
                                 Row( // text Departure and Return date
@@ -363,7 +433,7 @@ class _HomePageState extends State<HomePage> {
                     top: 40,
                     left: 37,
                     child: Text(
-                      'Go away!  some where',
+                      'Go away! some where',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           color: Color.fromRGBO(255, 255, 255, 1),
