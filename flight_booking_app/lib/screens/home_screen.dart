@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
 import 'package:flight_booking_app/design/style.dart';
+import 'package:flight_booking_app/widgets/SearchFlightPopUp.dart';
 import 'package:flight_booking_app/widgets/bottom_bar.dart';
 import 'package:flight_booking_app/widgets/class_select_toogle_buttom.dart';
 import 'package:flight_booking_app/widgets/toggle_buttom.dart';
+import 'package:flight_booking_app/widgets/xen_popup_card.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,10 +15,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  bool isRoundTrip = false; 
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+  void onToggleChanged(int index) { // Remove the underscore
+    setState(() {
+      isRoundTrip = index == 1;
     });
   }
 
@@ -32,14 +40,14 @@ class _HomePageState extends State<HomePage> {
           actions: []),
       //body
       body: // Figma Flutter Generator HomeWidget - FRAME
-          Container(
-              decoration: BoxDecoration(
+          Container( //all screan
+              decoration: BoxDecoration( // oreange header
                 // middle box
                 //color : Color.fromRGBO(255, 193, 169, 0.843137264251709),
                 color: const Color(0xFFEC441E),
               ),
               child: Stack(children: <Widget>[
-                Positioned( // orange header
+                Positioned( // big whrite box
                     top: 150,
                     left: 0,
                     right: 0,
@@ -66,9 +74,7 @@ class _HomePageState extends State<HomePage> {
                                 Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    // Icon(
-                                    //   Icons.login,
-                                    // ),
+                                    
                                     Text('One way'),
                                   ],
                                 ),
@@ -82,7 +88,9 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                 ),
                               ],
-                              initialSelection: [true, false],
+                              // initialSelection: [true, false],
+                              initialSelection: [!isRoundTrip, isRoundTrip],
+                              onToggleChanged:  onToggleChanged,
                             ),
                           ),
                           Column( // in side big  white box
@@ -118,7 +126,12 @@ class _HomePageState extends State<HomePage> {
                                         Text('Departure'),
                                       ],
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () => showDialog(
+                                      context: context, 
+                                      builder: (builder) => XenPopupCard(
+                                        body: SearchFlightPopUp(),)
+                                        
+                                      ),
                                   ),
                                 ),
                                 Row( // text to
@@ -166,7 +179,12 @@ class _HomePageState extends State<HomePage> {
                                         Text('Arrival'),
                                       ],
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () => showDialog(
+                                      context: context, 
+                                      builder: (builder) => XenPopupCard(
+                                        body: SearchFlightPopUp(),)
+                                        
+                                      ),
                                   ),
                                 ),
                                 Row( // text Departure and Return date
@@ -180,11 +198,14 @@ class _HomePageState extends State<HomePage> {
                                         style: AppStyles.customTextStyle,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top:10,left: 120),
-                                      child: Text(
-                                        "Return",
-                                        style: AppStyles.customTextStyle,
+                                    Visibility(
+                                      visible: isRoundTrip,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top:10,left: 120),
+                                        child: Text(
+                                          "Return",
+                                          style: AppStyles.customTextStyle,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -213,26 +234,29 @@ class _HomePageState extends State<HomePage> {
                                         onPressed: () {},
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 20, top: 10),
-                                      child: OutlinedButton(
-                                        style: OutlinedButton.styleFrom(
-                                          primary: Colors.black,
-                                          fixedSize: Size(160,50),
-                                          backgroundColor:
-                                              const Color.fromARGB(11, 0, 0, 0),
+                                    Visibility(
+                                      visible: isRoundTrip,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, top: 10),
+                                        child: OutlinedButton(
+                                          style: OutlinedButton.styleFrom(
+                                            primary: Colors.black,
+                                            fixedSize: Size(160,50),
+                                            backgroundColor:
+                                                const Color.fromARGB(11, 0, 0, 0),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Icon(Icons.calendar_month),
+                                              SizedBox(width: 10,height: 50,), 
+                                              Text('Return date'),
+                                            ],
+                                          ),
+                                          onPressed: () {},
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Icon(Icons.calendar_month),
-                                            SizedBox(width: 10,height: 50,), 
-                                            Text('Return date'),
-                                          ],
-                                        ),
-                                        onPressed: () {},
                                       ),
                                     ),
                                   ],
@@ -273,7 +297,7 @@ class _HomePageState extends State<HomePage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            Icon(Icons.flight_takeoff),
+                                            Icon(Icons.people),
                                             SizedBox(width: 25 , height: 50,), 
                                             Text('Traveler'),
                                           ],
@@ -295,7 +319,7 @@ class _HomePageState extends State<HomePage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            Icon(Icons.flight_takeoff),
+                                            Icon(Icons.chair),
                                             SizedBox(width: 25,height: 50,), 
                                             Text('Class'),
                                           ],

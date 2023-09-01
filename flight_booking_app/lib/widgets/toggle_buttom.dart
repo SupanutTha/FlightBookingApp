@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
 class TransactionToggle extends StatefulWidget {
-  TransactionToggle({required this.children ,List<bool>? initialSelection}) {
+  TransactionToggle({
+    required this.children ,
+    List<bool>? initialSelection,
+    required this.onToggleChanged,
+    }) {
      _isSelected = initialSelection ?? List.generate(children.length, (index) => false);
   }
   final List<Widget> children;
   late final List<bool> _isSelected;
+  final ValueChanged<int> onToggleChanged;
   @override
   _TransactionToggleState createState() => _TransactionToggleState();
 }
@@ -28,7 +33,10 @@ class _TransactionToggleState extends State<TransactionToggle> {
                 buttonIndex < _isSelected.length;
                 buttonIndex++) {
               if (buttonIndex == index) {
-                if (!_isSelected[index]) _isSelected[buttonIndex] = true;
+                if (!_isSelected[index]){ 
+                  _isSelected[buttonIndex] = true;
+                  widget.onToggleChanged(index);
+                  }
               } else {
                 _isSelected[buttonIndex] = false;
               }
