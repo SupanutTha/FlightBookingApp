@@ -1,16 +1,31 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:flight_booking_app/widgets/suggestion_list.dart';
+import 'package:flight_booking_app/widgets/typeahead_desination.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class SearchFlightPopUp extends StatefulWidget{
+  final VoidCallback? resetCallback;
+  final TextEditingController controller;
+  SearchFlightPopUp ({Key? key ,required this.controller, this.resetCallback});
   @override
-  State<SearchFlightPopUp> createState() => _SearchFlightPopUpState();
+  _SearchFlightPopUpState createState() => _SearchFlightPopUpState();
 
 }
 
 class _SearchFlightPopUpState extends State<SearchFlightPopUp> {
+  List suggestions = []; 
+  // Method to update the suggestions based on the user input
+  void updateSuggestions(String pattern) async {
+    final updatedSuggestions = await SuggestionList(controller: widget.controller)
+        .suggestionsCallback(pattern);
+    setState(() {
+      suggestions = updatedSuggestions;
+    });
+  }
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)  {
     return Scaffold(
       body: Stack(
         children: [
@@ -25,16 +40,6 @@ class _SearchFlightPopUpState extends State<SearchFlightPopUp> {
                 iconTheme: IconThemeData(
                   color: Colors.black
                 ),
-                // flexibleSpace: FlexibleSpaceBar(// Disable stretching
-                //   titlePadding: EdgeInsets.zero,
-                //   collapseMode: CollapseMode.none,
-                //   stretchModes: [],
-                //   title: Row(
-                //     children: [
-                //       Text("  Where?",style: TextStyle(color: Colors.black),),
-                //     ],
-                //   ),
-                // ),
                 bottom: AppBar(
                     elevation: 0.0, 
                 automaticallyImplyLeading: false,
@@ -49,8 +54,16 @@ class _SearchFlightPopUpState extends State<SearchFlightPopUp> {
                   border: Border.all(color: Colors.grey), // Add border
                   borderRadius: BorderRadius.circular(8.0), // Add border radius
                 ),
-                child: const Center(
+                child: Center(
                   child: TextField(
+                    onChanged: (value) {
+                       updateSuggestions(value);
+                    },
+                    onTap: () {
+                      updateSuggestions(widget.controller.text);
+                    },
+                    controller:  widget.controller,
+                    keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                         hintText: 'Country, City or airport',
                         prefixIcon: Icon(Icons.search , color: Colors.black,),
@@ -65,7 +78,31 @@ class _SearchFlightPopUpState extends State<SearchFlightPopUp> {
               // Add other Sliver widgets here
             ],
           ),
-        ],
+          Positioned(
+            top: 115,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: ListView.builder(
+              itemCount: suggestions.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(suggestions[index]),
+                  onTap: () {
+                    widget.controller.text =
+                        suggestions[index].substring(suggestions[index].length - 3);
+                    debugPrint('You just selected ${suggestions[index]}');
+                    print(widget.controller);
+                    if (widget.resetCallback != null) {
+    widget.resetCallback!();
+  }
+                      Navigator.pop(context, widget.controller.text);
+                  },
+                );
+              },
+            ),
+          ),
+         ],
       ),
     );
   }
