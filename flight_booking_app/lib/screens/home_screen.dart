@@ -39,12 +39,12 @@ class _HomePageState extends State<HomePage> {
                 color: const Color(0xFFEC441E),
               ),
               child: Stack(children: <Widget>[
-                Positioned(
+                Positioned( // orange header
                     top: 150,
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    child: Container(
+                    child: Container( // buttom toggle
                       width: 430,
                       height: 612,
                       decoration: BoxDecoration(
@@ -85,9 +85,9 @@ class _HomePageState extends State<HomePage> {
                               initialSelection: [true, false],
                             ),
                           ),
-                          Column(
+                          Column( // in side big  white box
                               children: [
-                                Row(
+                                Row( //text From
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ],
                                 ),
-                                Padding(
+                                Padding( //search Departure
                                   padding: const EdgeInsets.only(
                                       left: 35, top: 10, right: 35),
                                   child: OutlinedButton(
@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                                     onPressed: () {},
                                   ),
                                 ),
-                                Row(
+                                Row( // text to
                                     children: [
                                       Padding(
                                       padding: const EdgeInsets.only(left: 35),
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ],
                                   ),
-                                Padding(
+                                Padding( // seach Arrival
                                   padding: const EdgeInsets.only(
                                       left: 35, top: 0, right: 35),
                                   child: OutlinedButton(
@@ -169,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                                     onPressed: () {},
                                   ),
                                 ),
-                                Row(
+                                Row( // text Departure and Return date
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ],
                                 ),
-                                Row(
+                                Row( // buttom select departure Date and Retrun date
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(
@@ -237,7 +237,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ],
                                 ),
-                                Row(
+                                Row( // text Traveler and Class 
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
@@ -257,7 +257,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ],
                                 ),
-                                Row(
+                                Row( // buttom traveler and class
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(
@@ -275,7 +275,7 @@ class _HomePageState extends State<HomePage> {
                                           children: [
                                             Icon(Icons.flight_takeoff),
                                             SizedBox(width: 25 , height: 50,), 
-                                            Text('Departure'),
+                                            Text('Traveler'),
                                           ],
                                         ),
                                         onPressed: () {},
@@ -305,7 +305,7 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                   ],
                                 ),
-                                Padding(
+                                Padding( // search buttom
                                   padding: const EdgeInsets.only(
                                       left: 35, top: 35, right: 35),
                                   child: OutlinedButton(
@@ -334,7 +334,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     )),
-                Positioned(
+                Positioned( // slogan text
                     // slogan text
                     top: 40,
                     left: 37,
@@ -349,8 +349,11 @@ class _HomePageState extends State<HomePage> {
                               0 /*percentages not used in flutter. defaulting to zero*/,
                           fontWeight: FontWeight.normal,
                           height: 1.125),
-                    )),
-              ])),
+                    )
+                  ),
+                  ]
+                  )
+                ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
