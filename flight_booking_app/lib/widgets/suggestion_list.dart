@@ -23,7 +23,20 @@ class SuggestionList {
   }
 
   }
-  
+
+class SuggestResutl {
+       late TextEditingController suggestResutl;
+      void saveResutl(TextEditingController  _controller){
+          suggestResutl = _controller;
+      }
+      
+      TextEditingController get getResutl{
+        return suggestResutl;
+      }
+
+
+  }
+
   //   return FutureBuilder<List<String>>(
   //     future: suggestionsCallback(widget.controller.text),
   //     builder: (context, snapshot) {

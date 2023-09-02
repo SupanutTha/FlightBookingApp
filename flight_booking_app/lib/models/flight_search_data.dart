@@ -4,8 +4,9 @@ class FlightSearchData {
   final String adultCount;
   final String kidCount;
   final String babyCount;
-  // final DateTime? selectedDate;
-  // final List<DateTime?> selectedRange;
+  final DateTime? departureDate;
+  final DateTime? returnDate;
+  final String cabinClass;
   // final bool isEconomicClass;
   // final bool isPremiumEconomicClass;
   // final bool isBusinessClass;
@@ -17,6 +18,9 @@ class FlightSearchData {
     required this.adultCount,
     required this.kidCount,
     required this.babyCount,
+    required this.departureDate,
+    required this.returnDate,
+    required this.cabinClass,
     // required this.selectedDate,
     // required this.selectedRange,
     // required this.isEconomicClass,

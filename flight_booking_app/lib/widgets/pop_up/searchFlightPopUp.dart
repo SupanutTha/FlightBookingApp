@@ -1,14 +1,12 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flight_booking_app/widgets/suggestion_list.dart';
-import 'package:flight_booking_app/widgets/typeahead_desination.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class SearchFlightPopUp extends StatefulWidget{
-  final VoidCallback? resetCallback;
+
   final TextEditingController controller;
-  SearchFlightPopUp ({Key? key ,required this.controller, this.resetCallback});
+  SearchFlightPopUp ({Key? key ,required this.controller});
   @override
   _SearchFlightPopUpState createState() => _SearchFlightPopUpState();
 
@@ -89,13 +87,11 @@ class _SearchFlightPopUpState extends State<SearchFlightPopUp> {
                 return ListTile(
                   title: Text(suggestions[index]),
                   onTap: () {
-                    widget.controller.text =
-                        suggestions[index].substring(suggestions[index].length - 3);
+                    
+                    widget.controller.text = suggestions[index].substring(suggestions[index].length - 3);
                     debugPrint('You just selected ${suggestions[index]}');
                     print(widget.controller);
-                    if (widget.resetCallback != null) {
-    widget.resetCallback!();
-  }
+
                       Navigator.pop(context, widget.controller.text);
                   },
                 );
