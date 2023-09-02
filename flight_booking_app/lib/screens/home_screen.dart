@@ -1,9 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
 import 'package:flight_booking_app/design/style.dart';
-import 'package:flight_booking_app/widgets/SearchFlightPopUp.dart';
-import 'package:flight_booking_app/widgets/bottom_bar.dart';
-import 'package:flight_booking_app/widgets/class_select_toogle_buttom.dart';
+import 'package:flight_booking_app/widgets/pop_up/searchFlightPopUp.dart';
+import 'package:flight_booking_app/widgets/pop_up/singleDatePickPopUp.dart';
+import 'package:flight_booking_app/widgets/pop_up/travellersPopUp.dart';
+import 'package:flight_booking_app/widgets/pop_up/classPopUp.dart';
 import 'package:flight_booking_app/widgets/toggle_buttom.dart';
 import 'package:flight_booking_app/widgets/xen_popup_card.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String sumTraveller = '';
   int _selectedIndex = 0;
   bool isRoundTrip = false; 
   TextEditingController _departureController = TextEditingController();
@@ -23,14 +25,28 @@ class _HomePageState extends State<HomePage> {
   TextEditingController _adultCountController = TextEditingController(text: '1');
   TextEditingController _kidCountController = TextEditingController(text: '0');
   TextEditingController _babyCountController = TextEditingController(text: '0');
+  TextEditingController _departureDateController = TextEditingController();
+  TextEditingController _returnDateController = TextEditingController();
+  TextEditingController _classController = TextEditingController(text: 'Economic');
+ 
 
   void _navigateToResultPage() { // send data to class flight_search_data
   // ?? = defualt value
-  String departure = _departureController.text ?? '';
-  String arrival = _arrivalController.text ?? '';
-  String adultCount = _adultCountController.text ?? '1';
-  String kidCount = _kidCountController.text ?? '0';
-  String babyCount = _babyCountController.text ?? '0';
+  String departure = _departureController.text ;
+  String arrival = _arrivalController.text;
+  String adultCount = _adultCountController.text;
+  String kidCount = _kidCountController.text;
+  String babyCount = _babyCountController.text;
+  String cabinClass = _classController.text;
+
+  DateTime? departureDate;
+  if (_departureDateController.text.isNotEmpty) {
+    departureDate = DateTime.parse(_departureDateController.text);
+  }
+  DateTime? returnDate;
+  if (_returnDateController.text.isNotEmpty) {
+    returnDate = DateTime.parse(_returnDateController.text);
+  }
 
   FlightSearchData searchData = FlightSearchData( // collect data  in flightSearchData
     departure: departure,
@@ -38,6 +54,9 @@ class _HomePageState extends State<HomePage> {
     adultCount: adultCount,
     kidCount: kidCount,
     babyCount: babyCount,
+    departureDate: departureDate,
+    returnDate: returnDate,
+    cabinClass: cabinClass,
     // isEconomicClass: _isSelectedClass[0],
     // isPremiumEconomicClass: _isSelectedClass[1],
     // isBusinessClass: _isSelectedClass[2],
@@ -76,8 +95,28 @@ class _HomePageState extends State<HomePage> {
     : 'Departure';
   return Text(departureText);
 }
+  List<DateTime?> _singleDatePickerValueWithDefaultValue = [DateTime.now(),];
+  List<DateTime?> _rangeDatePickerWithActionButtonsWithValue = [ // calendar for round trip
+    DateTime.now(),
+    DateTime.now().add(const Duration(days: 0)),
+  ];
+  
+  void updateTotalTravellers() {
+    // Parse the values from the controllers and calculate the total
+    final adultCount = int.tryParse(_adultCountController.text) ?? 0;
+    final kidCount = int.tryParse(_kidCountController.text) ?? 0;
+    final babyCount = int.tryParse(_babyCountController.text) ?? 0;
+
+    final total = adultCount + kidCount + babyCount +1;
+
+    // Update the sumTraveller variable with the total
+    setState(() {
+      sumTraveller = total.toString();
+    });
+  }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       //appBar
       appBar: AppBar(
@@ -115,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
+                          Container( // single / round trip
                             margin: EdgeInsets.symmetric(vertical: 10),
                             child: TransactionToggle(
                               children: [
@@ -282,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 Row( // buttom select departure Date and Retrun date
                                   children: [
-                                    Padding(
+                                    Padding( // departure date
                                       padding: const EdgeInsets.only(
                                           left: 35, top: 10, right: 25),
                                       child: OutlinedButton(
@@ -298,13 +337,29 @@ class _HomePageState extends State<HomePage> {
                                           children: [
                                             Icon(Icons.calendar_month),
                                             SizedBox(width: 0 , height: 50,), 
-                                            Text('Departure date'),
+                                            Builder(
+                                                builder: (context) {
+                                                  final departureDate = _departureDateController.text.isNotEmpty
+                                                      ? _departureDateController.text
+                                                      : 'Departure date';
+                                                  return Text(departureDate);
+                                                },
+                                              )
+                                            
                                           ],
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () async { // popup data pick
+                                          await showDialog(
+                                          context: context,
+                                          builder: (builder) => XenPopupCard(
+                                          body: SingleDatePickPopUp(controller: _departureDateController , selectedDate: _singleDatePickerValueWithDefaultValue,),
+                                            ),
+                                          );
+                                          setState(() {});
+                                        },
                                       ),
                                     ),
-                                    Visibility(
+                                    Visibility( // return date
                                       visible: isRoundTrip,
                                       child: Padding(
                                         padding: const EdgeInsets.only(
@@ -322,10 +377,27 @@ class _HomePageState extends State<HomePage> {
                                             children: [
                                               Icon(Icons.calendar_month),
                                               SizedBox(width: 10,height: 50,), 
-                                              Text('Return date'),
+                                              Builder(
+                                                builder: (context) {
+                                                  final returnDate = _returnDateController.text.isNotEmpty
+                                                      ? _returnDateController.text
+                                                      : 'Return date';
+                                                  return Text(returnDate);
+                                                },
+                                              ),
                                             ],
                                           ),
-                                          onPressed: () {},
+                                          onPressed: () async { // popup data pick
+                                          await showDialog(
+                                          context: context,
+                                          builder: (builder) => XenPopupCard(
+                                          body: SingleDatePickPopUp(controller: _returnDateController , selectedDate: _singleDatePickerValueWithDefaultValue,),
+                                            ),
+                                          );
+                                          setState(() {
+                                            print(_returnDateController);
+                                          });
+                                        },
                                         ),
                                       ),
                                     ),
@@ -369,10 +441,24 @@ class _HomePageState extends State<HomePage> {
                                           children: [
                                             Icon(Icons.people),
                                             SizedBox(width: 25 , height: 50,), 
-                                            Text('Traveler'),
+                                            Text('$sumTraveller Traveller'),
                                           ],
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () async {
+                                        await showDialog(
+                                        context: context,
+                                        builder: (builder) => XenPopupCard(
+                                          body: TravellersPopUp(
+                                            adultController: _adultCountController, 
+                                            kidController: _kidCountController, 
+                                            babyController: _babyCountController,
+                                             onChanged: updateTotalTravellers,
+                                             ),
+                                        ),
+                                      );
+                                      setState(() {
+                                      });
+                                    },
                                       ),
                                     ),
                                     Padding(
@@ -391,10 +477,18 @@ class _HomePageState extends State<HomePage> {
                                           children: [
                                             Icon(Icons.chair),
                                             SizedBox(width: 25,height: 50,), 
-                                            Text('Class'),
+                                            Text('${_classController.text}'),
                                           ],
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () async {
+                                        await showDialog(
+                                        context: context,
+                                        builder: (builder) => XenPopupCard(
+                                          body: ClassPopUp(controller: _classController),
+                                        ),
+                                      );
+                                      setState(() {});
+                                    },
                                       ),
                                     ),
                                   ],
@@ -432,17 +526,33 @@ class _HomePageState extends State<HomePage> {
                     // slogan text
                     top: 40,
                     left: 37,
-                    child: Text(
-                      'Go away! some where',
-                      textAlign: TextAlign.left,
-                      style: TextStyle(
-                          color: Color.fromRGBO(255, 255, 255, 1),
-                          fontFamily: 'Amiri Quran Colored',
-                          fontSize: 40,
-                          letterSpacing:
-                              0 /*percentages not used in flutter. defaulting to zero*/,
-                          fontWeight: FontWeight.normal,
-                          height: 1.125),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Go away!     ',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Color.fromRGBO(255, 255, 255, 1),
+                              fontFamily: 'Amiri Quran Colored',
+                              fontSize: 40,
+                              letterSpacing:
+                                  0 /*percentages not used in flutter. defaulting to zero*/,
+                              fontWeight: FontWeight.normal,
+                              height: 1.125),
+                        ),
+                        Text(
+                          'some where',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Color.fromRGBO(255, 255, 255, 1),
+                              fontFamily: 'Amiri Quran Colored',
+                              fontSize: 40,
+                              letterSpacing:
+                                  0 /*percentages not used in flutter. defaulting to zero*/,
+                              fontWeight: FontWeight.normal,
+                              height: 1.125),
+                        ),
+                      ],
                     )
                   ),
                   ]
