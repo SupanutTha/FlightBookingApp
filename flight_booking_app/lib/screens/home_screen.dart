@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
 import 'package:flight_booking_app/design/style.dart';
+import 'package:flight_booking_app/utilities/create_db.dart';
 import 'package:flight_booking_app/widgets/pop_up/searchFlightPopUp.dart';
 import 'package:flight_booking_app/widgets/pop_up/singleDatePickPopUp.dart';
 import 'package:flight_booking_app/widgets/pop_up/travellersPopUp.dart';
@@ -8,6 +9,7 @@ import 'package:flight_booking_app/widgets/pop_up/classPopUp.dart';
 import 'package:flight_booking_app/widgets/toggle_buttom.dart';
 import 'package:flight_booking_app/widgets/xen_popup_card.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../models/flight_search_data.dart';
 
@@ -114,9 +116,10 @@ class _HomePageState extends State<HomePage> {
       sumTraveller = total.toString();
     });
   }
+
   @override
   Widget build(BuildContext context) {
-
+  
     return Scaffold(
       //appBar
       appBar: AppBar(
