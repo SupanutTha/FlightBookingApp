@@ -3,7 +3,7 @@ import '/models/airline_db.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-
+import 'package:flight_booking_app/models/airline_logo_db.dart';
 import '/models/airport_db.dart';
 
 class DatabaseHelper {
@@ -11,6 +11,7 @@ class DatabaseHelper {
 
   static Database? _airportsDatabase;
   static Database? _airlineDatabase;
+  static Database? _airlineLogoDatabase;
 
   DatabaseHelper._init();
 
@@ -26,8 +27,14 @@ class DatabaseHelper {
     
     return _airlineDatabase!;
   }
-  
-  get http => null;
+
+  Future<Database> get airlinesLogoDatabase async {
+    if (_airlineLogoDatabase != null) return _airlineLogoDatabase!;
+    _airlineLogoDatabase = await _initAirlinesLogoDB('airlinesLogo.db');
+    
+    return _airlineLogoDatabase!;
+  }
+
 
   Future<Database> _initAirportsDB(String dbName) async {
     final dbPath = await getDatabasesPath();
@@ -39,8 +46,15 @@ class DatabaseHelper {
   Future<Database> _initAirlinesDB(String dbName) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, dbName);
-
+    print(path);
     return await openDatabase(path, version: 1, onCreate: _createAirlinesDB);
+  }
+
+  Future<Database> _initAirlinesLogoDB(String dbName) async {
+    final dbPath = await getDatabasesPath();
+    final path = join (dbPath, dbName);
+    print(path);
+    return await openDatabase(path ,version: 1, onCreate: _createAirlinesLogoDB);
   }
 
   Future<void> _createAirportsDB(Database db, int version) async {
@@ -65,7 +79,7 @@ class DatabaseHelper {
   Future<void> _createAirlinesDB(Database db, int version) async {
   final idType = 'TEXT PRIMARY KEY NOT NULL'; // Assuming id is a string
   final textType = 'TEXT NOT NULL';
-
+  print("check2");
   await db.execute('''
     CREATE TABLE IF NOT EXISTS airlines (
       id $idType,
@@ -81,15 +95,66 @@ class DatabaseHelper {
   ''');
 }
 
+  Future<void> _createAirlinesLogoDB (Database db , int version) async {
+    final idType = 'TEXT PRIMARY KEY NOT NULL'; // Assuming objectID is a string
+    final textType = 'TEXT NOT NULL';
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS airlinesLogo (
+      id $idType,
+      lcc TEXT,
+      name $textType,
+      logo TEXT,
+      UNIQUE (id) ON CONFLICT REPLACE
+    )
+  ''');
+  print("create airlinelogo db success");
+  }
+
+  Future<void> insertAirlineLogoJsonToDatabase(List<dynamic> jsonList) async {
+  final db = await instance.airlinesLogoDatabase;
+  for (final json in jsonList) {
+    final airlineLogo = AirlineLogo(
+      id: json['id'],
+      lcc : json['lcc'], // Replace with the correct field name in your JSON data
+      name: json['name'], // Replace with the correct field name in your JSON data
+      logo: json['logo'], // Replace with the correct field name in your JSON data
+    );
+
+    await db.insert('airlinesLogo', airlineLogo.toMap());
+    print('Inserted airline logo: complete');
+  }
+}
+
 
   Future<void> dropAirportsTable() async {
     final db = await instance.airportsDatabase;
     await db.execute('DROP TABLE IF EXISTS airports');
   }
+  Future<void> dropAirlineLogoTable() async {
+    final db = await instance.airportsDatabase;
+    await db.execute('DROP TABLE IF EXISTS airlinesLogo');
+    await db.execute('DROP TABLE IF EXISTS airlineLogo');
+    print("Drop complete");
+  }
 
   Future<int> insertAirport(Airport airport) async {
     final db = await instance.airportsDatabase;
     return await db.insert('airports', airport.toMap());
+  }
+
+  Future<List<AirlineLogo>> retrieveAirlinesLogo() async {
+    final db = await instance.airlinesLogoDatabase;
+    final List<Map<String ,dynamic>> map = await db.query('airlinesLogo');
+
+    return List.generate(map.length, (i){
+      return AirlineLogo(
+        id:  map[i]['id'], 
+        lcc: map[i]['lcc'], 
+        name: map[i]['name'], 
+        logo: map[i]['logo']);
+
+    });
+
   }
 
   Future<List<Airport>> retrieveAirports() async {
@@ -199,6 +264,17 @@ Future<List<Airline>> retrieveAirlines() async {
   Airline? airline = await getAirlineByCode(carrierCode);
   return airline?.name ?? "Unknown Airline";
 }
+
+// Future<void> importAirlineLogoDataFromJson() async {
+//   final jsonData = await fetchAirlineLogoJsonData(); // Replace with your JSON loading logic
+//   await insertAirlineLogoJsonToDatabase(jsonData);
+// }
+
+// Future<List<dynamic>> fetchAirlineLogoJsonData() async {
+//   final String jsonString = await rootBundle.loadString('assets/json/airline_logo_data.json');
+//   final List<dynamic> jsonData = json.decode(jsonString);
+//   return jsonData;
+// }
 
 
 }

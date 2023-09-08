@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:flutter/material.dart';
 
 class TravellersPopUp extends StatefulWidget {
@@ -25,9 +27,11 @@ class _TravellersPopUpState extends State<TravellersPopUp> {
   void initState() {
     super.initState();
     // Initialize the values from the TextEditingControllers
+    print('${adults},${kids},${infants}');
     adults = int.tryParse(widget.adultController.text) ?? 0;
     kids = int.tryParse(widget.kidController.text) ?? 0;
     infants = int.tryParse(widget.babyController.text) ?? 0;
+    print('${adults},${kids},${infants}');
   }
 
   @override
@@ -79,6 +83,7 @@ class _TravellersPopUpState extends State<TravellersPopUp> {
               children: [
                 buildRow("Adults", adults, (value) {
                   setState(() {
+                    print('$adults : $value');
                     adults = value;
                   });
                 }),
@@ -92,15 +97,7 @@ class _TravellersPopUpState extends State<TravellersPopUp> {
                     infants = value;
                   });
                 }),
-                Text(" "),
-                Text(" "),
-                Text(" "),
-                Text(" "),
-                Text(" "),
-                Text(" "),
-                Text(" "),
-                Text(" "),
-                Text(" "),
+                SizedBox(height: 150),
                 OutlinedButton(
             style: OutlinedButton.styleFrom(
               primary: Colors.black,
@@ -128,7 +125,7 @@ class _TravellersPopUpState extends State<TravellersPopUp> {
               widget.adultController.text = adults.toString();
               widget.kidController.text = kids.toString();
               widget.babyController.text = infants.toString();
-              widget.onChanged;
+              //widget.onChanged;
               debugPrint('All traveller  = adult :${widget.adultController} Kid :${widget.kidController} infants :${widget.babyController}');
               Navigator.pop(context );
             },
@@ -156,9 +153,10 @@ class _TravellersPopUpState extends State<TravellersPopUp> {
                 onPressed: () {
                   if (value > 0) {
                     onChanged(value - 1);
-                     widget.onChanged();
+                     widget.onChanged( title , value);
                   }
                   setState(() {
+                    print('$title : $value');
                   });
                 },
               ),
@@ -167,7 +165,7 @@ class _TravellersPopUpState extends State<TravellersPopUp> {
                 icon: Icon(Icons.add),
                 onPressed: () {
                   onChanged(value + 1);
-                   widget.onChanged();
+                   widget.onChanged( title , value);
                    setState(() {
                    });
                 },

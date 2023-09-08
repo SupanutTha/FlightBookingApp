@@ -15,6 +15,12 @@ class FlightApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData( 
+        primaryColor: Color(0xFFEC441E),
+        appBarTheme: AppBarTheme(
+          iconTheme:  IconThemeData(color:  Colors.black),
+        )
+      ),
       title: 'Loading App',
       initialRoute: '/loading', // Set the initial route to the LoadingScreen
       routes: {

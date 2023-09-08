@@ -43,35 +43,26 @@ class ApiService {
   static Future<(List<Flight>, List<Flight>)> searchFlights( FlightSearchData searchData) async {
     final accessToken = await getAccessToken();
   try {
-    var flightClass = '';
-    if ( searchData.isEconomicClass){
-      flightClass = 'ECONOMY';
-    }
-    else if( searchData.isBusinessClass){
-      flightClass = 'BUSINESS';
-    }
-    else if( searchData.isPremiumEconomicClass){
-      flightClass = 'PREMIUM_ECONOMY';
-    }
-    else if( searchData.isPremiumEconomicClass){
-      flightClass = 'FIRST';
-    }
 
     final baseUrl = 'https://test.api.amadeus.com/v2/shopping/flight-offers';
     final dateFormatter = DateFormat('yyyy-MM-dd'); // set format date
-    print(searchData.getEffectiveDate()!); // check that what date data is available 
-    final formattedDate = dateFormatter.format(searchData.getEffectiveDate()!); // change format date
+    //print(searchData.getEffectiveDate()!); // check that what date data is available 
+    final departureDate = dateFormatter.format(searchData.departureDate!); // change format date
     final maxFlights = 50; // Set the maximum number of flight results to display .now recommend 2 is maximun if set maximum more than it can search it gonna bug it list
 
     print("check search");
     print(searchData.departure);
     print(searchData.arrival);
-    print(flightClass);
+    print(searchData.cabinClass);
+    print(departureDate);
+    print(searchData.adultCount);
+    print(searchData.kidCount);
+    print(searchData.babyCount);
     print(accessToken);
     // 1. Search for outbound flights
     final outboundResponse = await http.get(
       Uri.parse(
-        '$baseUrl?originLocationCode=${searchData.departure}&destinationLocationCode=${searchData.arrival}&departureDate=$formattedDate&adults=${searchData.adultCount}&children=${searchData.kidCount}&infants=${searchData.babyCount}&travelClass=$flightClass',
+        '$baseUrl?originLocationCode=${searchData.departure}&destinationLocationCode=${searchData.arrival}&departureDate=$departureDate&adults=${searchData.adultCount}&children=${searchData.kidCount}&infants=${searchData.babyCount}&travelClass=${searchData.cabinClass}',
       ),
       headers: {
         'Authorization': 'Bearer $accessToken',
@@ -79,10 +70,11 @@ class ApiService {
     );
 
     // 2. Search for return flights
-    final returnDate = dateFormatter.format(searchData.getEffectiveDateReturn()!);
+    final returnDate = dateFormatter.format(searchData.returnDate!);
+     print(returnDate);
     final returnResponse = await http.get(
       Uri.parse(
-        '$baseUrl?originLocationCode=${searchData.arrival}&destinationLocationCode=${searchData.departure}&departureDate=$returnDate&adults=${searchData.adultCount}&children=${searchData.kidCount}&infants=${searchData.babyCount}&travelClass=$flightClass',
+        '$baseUrl?originLocationCode=${searchData.arrival}&destinationLocationCode=${searchData.departure}&departureDate=$returnDate&adults=${searchData.adultCount}&children=${searchData.kidCount}&infants=${searchData.babyCount}&travelClass=${searchData.cabinClass}',
       ),
       headers: {
         'Authorization': 'Bearer $accessToken',
@@ -128,7 +120,7 @@ class ApiService {
 
       // if the bug that one way trip show flight back trip by if one way trip not adding flight back trip in list
       List<Flight> resultsIn = [];
-      if (searchData.selectedDate == null){
+      if (searchData.departureDate == null){
         resultsIn.addAll(returnResults);
       }
       return (resultsOut,resultsIn);
