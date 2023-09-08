@@ -1,12 +1,12 @@
 class FlightSearchData {
-  final String departure;
-  final String arrival;
-  final String adultCount;
-  final String kidCount;
-  final String babyCount;
-  final DateTime? departureDate;
-  final DateTime? returnDate;
-  final String cabinClass;
+   String departure;
+   String arrival;
+   String adultCount;
+   String kidCount;
+   String babyCount;
+   DateTime? departureDate;
+   DateTime? returnDate;
+   String cabinClass;
   // final bool isEconomicClass;
   // final bool isPremiumEconomicClass;
   // final bool isBusinessClass;
@@ -22,14 +22,12 @@ class FlightSearchData {
     required this.returnDate,
     required this.cabinClass,
     // required this.selectedDate,
-    // required this.selectedRange,
     // required this.isEconomicClass,
     // required this.isPremiumEconomicClass,
     // required this.isBusinessClass,
     // required this.isFirstClass,
   });
   
-
   // check what date value have data
   // if one way trip = selectedDate has data
   // if reound flight = selectedRange.first has data

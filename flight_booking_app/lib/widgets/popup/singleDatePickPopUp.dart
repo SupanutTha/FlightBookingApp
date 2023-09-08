@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class SingleDatePickPopUp extends StatefulWidget{
-  TextEditingController controller;
-  List<DateTime?> selectedDate;
+  DateTime? controller;
+  //List<DateTime?> selectedDate =[DateTime.now()];
+  final Function callback;
   SingleDatePickPopUp ({
     Key? key ,
     required this.controller,
-    required this.selectedDate
+    //required this.selectedDate, 
+    required this.callback
     });
   @override
   _SingleDatePickPopUpState createState() => _SingleDatePickPopUpState();
@@ -18,12 +20,15 @@ class SingleDatePickPopUp extends StatefulWidget{
 }
 
 class  _SingleDatePickPopUpState extends State<SingleDatePickPopUp> {
-  late List<DateTime?> selectedDateList;
-
+   late List<DateTime?> selectedDateList =[];
   @override
   void initState() {
     super.initState();
-    selectedDateList = List.from(widget.selectedDate);
+    print(widget.controller);
+    selectedDateList.add(widget.controller);
+    
+    selectedDateList[0] = widget.controller ?? DateTime.now();
+    print('selected date ${selectedDateList}');
   }
   
   @override
@@ -55,13 +60,20 @@ class  _SingleDatePickPopUpState extends State<SingleDatePickPopUp> {
                       color: Colors.black,
                       fontSize: 15,
                     ),),
-                    Text(
-                      DateFormat('E, d MMM yy').format(selectedDateList[0]!),
+                    Builder(
+                      builder: (context){
+                        final calendarText = selectedDateList[0] == null
+                        ? DateTime.now()
+                        : selectedDateList[0];
+                        return Text(
+                      DateFormat('E, d MMM yy').format(calendarText!),
                       style: TextStyle(
                         color: Color(0xFFEC441E),
                         fontSize: 14,
                       ),
-                    )
+                    );
+                      }),
+                    
                   ],
                 ),
               ),
@@ -81,11 +93,17 @@ class  _SingleDatePickPopUpState extends State<SingleDatePickPopUp> {
                       Container(
                         padding: const EdgeInsets.only(top: 0),
                         child: CalendarDatePicker2(
-                          config: CalendarDatePicker2Config(),
+                          config: CalendarDatePicker2Config(
+                            currentDate: selectedDateList[0],
+                            selectableDayPredicate: (day) => !day
+                              .difference(DateTime.now().subtract(const Duration(days: 1)))
+                              .isNegative,
+                          ),
                           value: selectedDateList,
                           onValueChanged: (dates) {
                             setState(() {
                               selectedDateList = List.from(dates);
+                              print(selectedDateList);
                             });
                           }
                         ),
@@ -106,23 +124,18 @@ class  _SingleDatePickPopUpState extends State<SingleDatePickPopUp> {
                                         ),),
                                       ],
                                     ),
-                                    // onPressed: () {
-                                    //   widget.controller = widget.selectedDate as TextEditingController;
-                                    //   debugPrint('You just selected ${widget.controller}');
-                                    //   print(widget.controller);
-                                    //   print(context);
-                                    //   Navigator.pop(context, widget.controller);
-                                    // },
                                     onPressed: (){
                                       if (selectedDateList.isNotEmpty && selectedDateList[0] != null) {
-                                        widget.controller.text =
-                                            DateFormat('yyyy-MM-dd').format(selectedDateList[0]!);
-                                        Navigator.pop(context, widget.controller.text);
-                    }
+                                        print('checkif');
+                                        widget.controller =  selectedDateList[0]!;
+                                        print('controller :${widget.controller}');
+                                        widget.callback(widget.controller);
+                                        Navigator.pop(context,  widget.controller);
+                                     }
                                     },
                                   ),
                     ],
-                  ),            
+                  ),          
           
           ),
          ],

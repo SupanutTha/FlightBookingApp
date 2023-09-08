@@ -2,22 +2,30 @@ import 'package:flutter/material.dart';
 
 class ClassPopUp extends StatefulWidget {
   final TextEditingController controller;
-
-  const ClassPopUp({super.key, required this.controller});
+  final Function callback;
+  const ClassPopUp({
+    super.key,
+    required this.controller,
+    required this.callback
+  });
 
   @override
   _ClassPopUpState createState() => _ClassPopUpState();
 }
 
 class _ClassPopUpState extends State<ClassPopUp> {
-  String selectedClass = 'Economic';
+  String selectedClass = 'Economy';
 
   void selectClass(String className) {
     setState(() {
       selectedClass = className;
     });
+  
   }
-
+  void initState(){
+    super.initState();
+    selectedClass = widget.controller.text;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +75,7 @@ class _ClassPopUpState extends State<ClassPopUp> {
             bottom: 0,
             child: Column(
               children: [
-                buildClassTile("Economic"),
+                buildClassTile("Economy"),
                 buildDivider(), // Divider between classes
                 buildClassTile("Premium Economic"),
                 buildDivider(), // Divider between classes
@@ -75,12 +83,7 @@ class _ClassPopUpState extends State<ClassPopUp> {
                 buildDivider(), // Divider between classes
                 buildClassTile("First"),
                 buildDivider(),
-                Text(""),
-                Text(""),
-                Text(""),
-                Text(""),
-                Text(""),
-                Text(""),
+                SizedBox(height: 100),
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     primary: Colors.black,
@@ -103,6 +106,7 @@ class _ClassPopUpState extends State<ClassPopUp> {
                   ),
                   onPressed: () {
                     widget.controller.text = selectedClass;
+                    widget.callback();
                     Navigator.pop(context);
                   },
                 ),

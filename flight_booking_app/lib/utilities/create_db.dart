@@ -1,26 +1,36 @@
 import 'dart:convert';
+import 'package:flight_booking_app/models/airline_db.dart';
 import 'package:flight_booking_app/utilities/database_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
 class CreateDb{
 
   createAirplaneAirlineDb() async {
-
   WidgetsFlutterBinding.ensureInitialized();
+  
   print("initialized");
   final dbHelper = DatabaseHelper.instance; // Create an instance of DatabaseHelper
   print("check database init");
   // Initialize the database
+
   try {
     await DatabaseHelper.instance.airlinesDatabase;
-    print("Database initialized successfully");
+    print("airline Database initialized successfully");
   } catch (e) {
     print("Error initializing database: $e");
   }
 
   try{
     await DatabaseHelper.instance.airportsDatabase;
-   print("Database initialized successfully");
+   print("airports Database initialized successfully");
+  } catch (e) {
+    print("Error initializing database: $e");
+  }
+
+  try{
+     await DatabaseHelper.instance.airlinesLogoDatabase;
+   print("airline logo Database initialized successfully");
   } catch (e) {
     print("Error initializing database: $e");
   }
@@ -47,6 +57,16 @@ class CreateDb{
     print("Error inserting data: $e");
   }
 
+  final jsonString3 = await dbHelper.loadAsset('assets/json/airlines_logo_data.json');
+  final jsonData3 = json.decode(jsonString3);
+  try {
+    await dbHelper.insertAirlineLogoJsonToDatabase(jsonData3);
+    print("Insert data successfully");
+  } catch (e) {
+    print("Error inserting data: $e");
+  }
+
+
   
   final airports = await dbHelper.retrieveAirports();
   airports.forEach((airport) {
@@ -57,6 +77,16 @@ class CreateDb{
   airlines.forEach((airline){
     // print(airline.name);
   }) ;
+
+  try {
+    final airlinesLogo = await dbHelper.retrieveAirlinesLogo();
+    airlinesLogo.forEach((element) {
+      print(element);
+    });
+  } catch (e) {
+    print("Error retrieving airlinesLogo data: $e");
+  }
+
 
   }
 
