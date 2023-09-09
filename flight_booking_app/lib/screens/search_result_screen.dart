@@ -3,6 +3,7 @@ import 'package:flight_booking_app/models/flight_search_data.dart';
 import 'package:flight_booking_app/utilities/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flight_booking_app/widgets/flight_suggest.dart';
+import 'package:lottie/lottie.dart';
 
 class ResultPage extends StatefulWidget{
   final FlightSearchData searchData; // retrive data form flight_search_data
@@ -23,9 +24,9 @@ class _ResultPageState extends State<ResultPage>{
 
   
   @override
-  void initState() {
+  void initState()   {
     super.initState();
-    _fetchFlightResults();
+      _fetchFlightResults();
   }
   void _sortResults(String option, List<Flight> sortedResults) {
     setState(() {
@@ -34,12 +35,12 @@ class _ResultPageState extends State<ResultPage>{
     });
   }
   Future<void> _fetchFlightResults() async {
-    print(widget.searchData.departure);
-    print(widget.searchData.arrival);
-    print(widget.searchData.departureDate);
-    print(widget.searchData.returnDate);
-    print(widget.searchData.adultCount);
-    print(widget.searchData.cabinClass);
+    // print(widget.searchData.departure);
+    // print(widget.searchData.arrival);
+    // print(widget.searchData.departureDate);
+    // print(widget.searchData.returnDate);
+    // print(widget.searchData.adultCount);
+    // print(widget.searchData.cabinClass);
     try {
       var searchTuple = await ApiService.searchFlights(widget.searchData);
       _searchResults = searchTuple.$1;
@@ -56,6 +57,7 @@ class _ResultPageState extends State<ResultPage>{
       print('Error: $e');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,11 +65,22 @@ class _ResultPageState extends State<ResultPage>{
         title: Text('Search result', style: TextStyle(color: Colors.black),),
         backgroundColor: Colors.white,
         elevation: 0,
-
       ),
-      body: Center
-      (child: flightSuggestions())
-      //(child :Text("test1"))
+      backgroundColor: Colors.white,
+     body: _isLoading
+      ? Center(
+          child: Lottie.asset('assets/json/lottie/animation_flight.json'), // Display a loading indicator
+        )
+      : ListView.builder(
+          itemCount: _searchResults.length,
+          itemBuilder: (context, index) {
+            return FlightSuggestList(
+              flightSuggestions: _searchResults,
+              index: index,
+            );
+          },
+        )
+
 
 
 
