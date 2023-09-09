@@ -1,28 +1,122 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
+import 'package:flight_booking_app/models/airline_db.dart';
+import 'package:flight_booking_app/models/flight.dart';
+import 'package:flight_booking_app/utilities/database_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-// class FlightSuggestList extends StatelessWidget {
-//   final List<Widget> flightSuggestions;
+class FlightSuggestList extends StatelessWidget {
+  final List<Flight> flightSuggestions;
+  final int index;
 
-//   FlightSuggestList({required this.flightSuggestions});
+  FlightSuggestList({required this.flightSuggestions, required this.index});
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return ListView.builder(
-//       itemCount: flightSuggestions.length,
-//       itemBuilder: (context, index) {
-//         return flightSuggestions[index];
-//       },
-//     );
-//   }
-// }
+  String convertDuration(String durationString) {
+  Duration duration = Duration();
+  final hoursMatch = RegExp(r'(\d+)H').firstMatch(durationString);
+  final minutesMatch = RegExp(r'(\d+)M').firstMatch(durationString);
+  if (hoursMatch != null) {
+    final hours = int.parse(hoursMatch.group(1)!);
+    duration += Duration(hours: hours);
+  }
 
-Widget flightSuggestions (){
+  if (minutesMatch != null) {
+    final minutes = int.parse(minutesMatch.group(1)!);
+    duration += Duration(minutes: minutes);
+  }
+
+  final hours = duration.inHours.toString().padLeft(2, '0');
+  final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
+
+  return '$hours hr $minutes min';
+  }
+
+  final dbHelper = DatabaseHelper.instance;
+  Future<String> findCityAndCountry(String iata) async {
+    final airports = await dbHelper.retrieveAirports();
+    final matchingAirport = airports.firstWhere(
+      (airport) => airport.iata.toUpperCase() == iata.toUpperCase(),
+    );
+
+    if (matchingAirport != null) {
+      final cityAndCountry = '${matchingAirport.city}, ${matchingAirport.country}';
+      return cityAndCountry;
+    } else {
+      // Handle the case where no matching airport was found.
+      return 'Unknown';
+    }
+  }
+  // Future<String> findLogo(String iata) async {
+  //   final logo = await dbHelper.retrieveAirlinesLogo();
+  //   final airline = await dbHelper.retrieveAirlines();
+  //   final matchingAirline = airline.firstWhere(
+  //     (airline) => airline.iata.toUpperCase() == iata.toUpperCase(),
+  //   );
+
+  //   if (matchingAirline != null) {
+  //     final airlineName = matchingAirline.name;
+  //     final matchLogo = logo.firstWhere(
+  //       (logo) => logo.name.toUpperCase() == airlineName);
+  //       if(matchLogo != null){
+  //         final logoPic = matchLogo.logo;
+  //         return logoPic;
+  //       }
+  //       else{
+  //         return 'Unknow';
+  //       }
+  //   } else {
+  //     // Handle the case where no matching airport was found.
+  //     return 'Unknown';
+  //   }
+  // }
+
+  Future<String> findLogo(String iata) async {
+    final logo = await dbHelper.retrieveAirlinesLogo();
+    final airline = await dbHelper.retrieveAirlines();
+    final matchingAirline = airline.firstWhere(
+      (airline) => airline.iata.toUpperCase() == iata.toUpperCase(),
+      // orElse: () => Airline(), // Provide a default value if not found
+    );
+
+    if (matchingAirline.name != null) {
+      final airlineName = matchingAirline.name;
+      final matchLogo = logo.firstWhere(
+        (logo) => logo.name.toUpperCase() == airlineName.toUpperCase(),
+        // orElse: () => AirlineLogo(), // Provide a default value if not found
+      );
+
+      if (matchLogo.logo != null) {
+        final logoPic = matchLogo.logo;
+        return logoPic;
+      } else {
+        return 'Unknown';
+      }
+    } else {
+      // Handle the case where no matching airline was found.
+      return 'Unknown';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final flight = flightSuggestions[index];
+    List<dynamic> segments = flight.itineraries[0]['segments'];
+              int connectingFlight = segments.length;
+                String carrierCode = segments[0]['carrierCode'];
+                String flightNumber = segments[0]['number'];
+                String duration = flight.itineraries[0]['duration'];
+                String departureIataCode = segments[0]['departure']['iataCode'];
+                String arrivalIataCode = segments[connectingFlight-1]['arrival']['iataCode'];
+                String departureTime = segments[0]['departure']['at'];
+                String arrivalTime = segments[connectingFlight-1]['arrival']['at'];
+              List<String> result = [carrierCode,flightNumber,duration,departureIataCode,arrivalIataCode,departureTime,arrivalTime];
   return Container(
     padding: EdgeInsets.only(top: 15),
     alignment: Alignment.topCenter,
     child: Container(
       width: 400,
-      height: 250,
+      height: 280,
       decoration: BoxDecoration( 
           borderRadius : BorderRadius.only(
             topLeft: Radius.circular(15),
@@ -50,50 +144,128 @@ Widget flightSuggestions (){
             Row(
               children: [
                 SizedBox(height: 50),
-                Expanded(flex: 3, child: Row(
-                  children: [
-                    Text('logo'),
-                    Text("test1" , style:TextStyle(fontSize: 17 , fontWeight:FontWeight.bold,)),
-                  ],
-                )),
-                Expanded(flex :1 ,child: Text("01 hr 40 min"))
+                Expanded(
+                    flex: 3,
+                    child: FutureBuilder<String>(
+                      future: findLogo(result[0]),
+                      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError || snapshot.data == 'Unknown') {
+                          // Handle the case where there's an error or logo is unknown.
+                          return Text("Unknow airline");
+                        } else {
+                          return Row(
+                            children: [
+                              Image.network(snapshot.data!,height: 40,),
+                              Text(
+                                ' ${result[0]} ${flightNumber}',
+                                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                Expanded(flex :1 ,child: Text(convertDuration(duration)))
               ],
             ),
-            Row(
+            Row( // iata city country
               children: [
-                SizedBox(height:70),
+                SizedBox(height:50),
                 Expanded(
                   flex: 1,
                   child: Column(
                     children: [
-                      Text("test1" ,style: TextStyle(fontSize: 20),textAlign: TextAlign.left,),
-                       Text("test1" ,style: TextStyle(),textAlign: TextAlign.left,),
+                      Text(departureIataCode ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
+                      FutureBuilder<String>(
+                      future: findCityAndCountry(departureIataCode),
+                      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator(); // Display a loading indicator while waiting.
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return Text(
+                            '${snapshot.data}', // Combine the city and country.
+                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w100),
+                          );
+                        }
+                        },
+                      ) 
                     ],
                   ),
                 ),
                 Expanded(
                   flex: 1,
-                  child: Text("line")),
+                  child: Image(image: AssetImage('assets/images/arrow_airplane.png'))
+                  
+                  ),
                 Expanded(
                 flex: 1,
                 child: Column(
                   children: [
-                    Text("test1" ,style: TextStyle(fontSize: 20),textAlign: TextAlign.left,),
-                      Text("test1" ,style: TextStyle(),textAlign: TextAlign.left,),
+                    Text(arrivalIataCode ,style: TextStyle(fontSize: 20 , fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
+                    FutureBuilder<String>(
+                      future: findCityAndCountry(arrivalIataCode),
+                      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator(); // Display a loading indicator while waiting.
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return Text(
+                            '${snapshot.data}', // Combine the city and country.
+                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w100),
+                          );
+                        }
+                        },
+                      ) 
                   ],
                 ),
               ),
+              
               ],
             ),
+            Row( // date time
+              children: [
+                SizedBox(height:35),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    children: [
+                      Text( DateFormat('h:mm a').format(DateFormat('HH:mm:ss').parse(departureTime.substring(11))) ,style: TextStyle(fontSize: 15, fontWeight:FontWeight.bold),textAlign: TextAlign.left,),
+                      Text(DateFormat('MMM dd, yyyy').format(DateTime.parse( departureTime.substring(0,10)))  ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.w100),textAlign: TextAlign.left,)
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: SizedBox(width: 20,)
+                  ),
+                Expanded(
+                flex: 1,
+                child: Column(
+                  children: [
+                      Text( DateFormat('h:mm a').format(DateFormat('HH:mm:ss').parse(arrivalTime.substring(11))) ,style: TextStyle(fontSize: 15, fontWeight:FontWeight.bold),textAlign: TextAlign.left,),
+                      Text(DateFormat('MMM dd, yyyy').format(DateTime.parse( arrivalTime.substring(0,10)))  ,style: TextStyle(fontSize: 12,fontWeight: FontWeight.w100),textAlign: TextAlign.left,)
+                  ],
+                ),
+              ),
+              
+              ],
+            ),
+            
             Divider(),
             Row(
               children: [
                 SizedBox(height: 40),
-                Expanded(flex: 3, child: Text("test1" , style:TextStyle(fontSize: 17 , fontWeight:FontWeight.bold,))),
-                Expanded(flex :1 ,child: Row(
+                Expanded(flex: 5, child: Text('${(flight.travelerPricings[0]['fareDetailsBySegment'][0]['cabin'][0]).toUpperCase()+(flight.travelerPricings[0]['fareDetailsBySegment'][0]['cabin']).substring(1).toLowerCase()} class')),
+                Expanded(flex :2 ,child: Row(
                   children: [
-                    Text("Form"),
-                    Text(' \$555' ,style: TextStyle(fontSize: 18 , fontWeight: FontWeight.bold),)
+                    Text("Price"),
+                    Text(' \$${double.parse(flight.price['grandTotal']).toInt()}' ,style: TextStyle(fontSize: 18 , fontWeight: FontWeight.bold),)
                   ],
                 ))
               ],
@@ -109,7 +281,7 @@ Widget flightSuggestions (){
                     MainAxisAlignment.center,
                 children: [
                   Icon(Icons.search , color: Colors.white,),
-                  SizedBox(height: 45,), 
+                  SizedBox(height: 55,), 
                   Text('Search Flights',
                   style: TextStyle(
                     color: Color.fromRGBO(255, 255, 255, 1),
@@ -125,194 +297,5 @@ Widget flightSuggestions (){
       ),
   )
   );
-  // return Container(
-      
-  //     // width: 343,
-  //     // height: 229,
-      
-  //     child: Stack(
-        
-  //       children: <Widget>[
-  //         Positioned(
-  //       top: 0,
-  //       left: 0,
-  //       child: Container( // white box
-        
-  //       width: 343,
-  //       height: 212,
-  //       decoration: BoxDecoration( 
-  //         borderRadius : BorderRadius.only(
-  //           topLeft: Radius.circular(15),
-  //           topRight: Radius.circular(15),
-  //           bottomLeft: Radius.circular(15),
-  //           bottomRight: Radius.circular(15),
-  //         ),
-  //     boxShadow : [BoxShadow(
-  //         color: Color.fromRGBO(0, 0, 0, 0.10000000149011612),
-  //         offset: Offset(0,2),
-  //         blurRadius: 4
-  //     )],
-  //     color : Color.fromRGBO(255, 255, 255, 1),
-  //     border : Border.all(
-  //         color: Color.fromRGBO(0, 0, 0, 1),
-  //         width: 1,
-  //       ),
-  //      )
-  //     )
-  //     ),Positioned(
-  //       top: 124,
-  //       left: 19,
-  //       child: Text('Business Class', textAlign: TextAlign.left, style: TextStyle(
-  //       color: Color.fromRGBO(0, 0, 0, 1),
-  //       fontFamily: 'Inter',
-  //       fontSize: 12,
-  //       letterSpacing: 0 /*percentages not used in flutter. defaulting to zero*/,
-  //       fontWeight: FontWeight.normal,
-  //       height: 1
-  //     ),)
-  //     ),Positioned(
-  //       top: 124,
-  //       left: 246,
-  //       child: Text('From', textAlign: TextAlign.left, style: TextStyle(
-  //       color: Color.fromRGBO(0, 0, 0, 1),
-  //       fontFamily: 'Inter',
-  //       fontSize: 12,
-  //       letterSpacing: 0 /*percentages not used in flutter. defaulting to zero*/,
-  //       fontWeight: FontWeight.normal,
-  //       height: 1
-  //     ),)
-  //     ),Positioned(
-  //       top: 106,
-  //       left: 0,
-  //       child: Divider(
-  //       color: Color.fromRGBO(0, 0, 0, 1),
-  //       thickness: 1
-  //     )
-      
-  //     ),Positioned(
-  //       top: 229,
-  //       left: 0,
-  //       child: Divider(
-  //       color: Color.fromRGBO(0, 0, 0, 1),
-  //       thickness: 1
-  //     )
-      
-  //     ),Positioned(
-  //       top: 20,
-  //       left: 56,
-  //       child: Text('IN 239', textAlign: TextAlign.left, style: TextStyle(
-  //       color: Color.fromRGBO(0, 0, 0, 1),
-  //       fontFamily: 'Inter',
-  //       fontSize: 15,
-  //       letterSpacing: 0 /*percentages not used in flutter. defaulting to zero*/,
-  //       fontWeight: FontWeight.normal,
-  //       height: 1
-  //     ),)
-  //     ),Positioned(
-  //       top: 20,
-  //       left: 246,
-  //       child: Text('01 hr 40 min', textAlign: TextAlign.left, style: TextStyle(
-  //       color: Color.fromRGBO(0, 0, 0, 1),
-  //       fontFamily: 'Inter',
-  //       fontSize: 12,
-  //       letterSpacing: 0 /*percentages not used in flutter. defaulting to zero*/,
-  //       fontWeight: FontWeight.normal,
-  //       height: 1
-  //     ),)
-  //     ),Positioned(
-  //       top: 61,
-  //       left: 19,
-  //       child: Text('5.50 AM', textAlign: TextAlign.left, style: TextStyle(
-  //       color: Color.fromRGBO(0, 0, 0, 1),
-  //       fontFamily: 'Inter',
-  //       fontSize: 15,
-  //       letterSpacing: 0 /*percentages not used in flutter. defaulting to zero*/,
-  //       fontWeight: FontWeight.normal,
-  //       height: 1
-  //     ),)
-  //     ),Positioned(
-  //       top: 58,
-  //       left: 259,
-  //       child: Text('5.50 AM', textAlign: TextAlign.left, style: TextStyle(
-  //       color: Color.fromRGBO(0, 0, 0, 1),
-  //       fontFamily: 'Inter',
-  //       fontSize: 15,
-  //       letterSpacing: 0 /*percentages not used in flutter. defaulting to zero*/,
-  //       fontWeight: FontWeight.normal,
-  //       height: 1
-  //     ),)
-  //     ),Positioned(
-  //       top: 20,
-  //       left: 19,
-  //       child: Container(
-  //       width: 25,
-  //       height: 24,
-  //       decoration: BoxDecoration(
-  //         color : Color.fromRGBO(217, 217, 217, 1),
-  //     borderRadius : BorderRadius.all(Radius.elliptical(25, 24)),
-  // )
-  //     )
-  //     ),Positioned(
-  //       top: 69,
-  //       left: 113,
-  //       child: Text("test")
-  //     //   SvgPicture.asset(
-  //     //   'assets/images/arrow2.svg',
-  //     //   semanticsLabel: 'arrow2'
-  //     // )
-      
-  //     ),Positioned(
-  //       top: 58,
-  //       left: 162,
-  //       child: Container(
-  //       width: 19,
-  //       height: 21,
-  //       decoration: BoxDecoration(
-  //         color : Color.fromRGBO(217, 217, 217, 1),
-  //     borderRadius : BorderRadius.all(Radius.elliptical(19, 21)),
-  // )
-  //     )
-  //     ),Positioned(
-  //       top: 122,
-  //       left: 289,
-  //       child: Text('\$230', textAlign: TextAlign.left, style: TextStyle(
-  //       color: Color.fromRGBO(0, 0, 0, 1),
-  //       fontFamily: 'Inter',
-  //       fontSize: 15,
-  //       letterSpacing: 0 /*percentages not used in flutter. defaulting to zero*/,
-  //       fontWeight: FontWeight.normal,
-  //       height: 1
-  //     ),)
-  //     ),Positioned(
-  //       top: 159,
-  //       left: 19,
-  //       child: Container(
-  //       width: 300,
-  //       height: 40,
-  //       decoration: BoxDecoration(
-  //         borderRadius : BorderRadius.only(
-  //           topLeft: Radius.circular(10),
-  //           topRight: Radius.circular(10),
-  //           bottomLeft: Radius.circular(10),
-  //           bottomRight: Radius.circular(10),
-  //         ),
-  //     color : Color.fromRGBO(255, 95, 26, 1),
-  // )
-  //     )
-  //     ),Positioned(
-  //       top: 172,
-  //       left: 148,
-  //       child: Text('Check', textAlign: TextAlign.left, style: TextStyle(
-  //       color: Color.fromRGBO(255, 255, 255, 1),
-  //       fontFamily: 'Inter',
-  //       fontSize: 15,
-  //       letterSpacing: 0 /*percentages not used in flutter. defaulting to zero*/,
-  //       fontWeight: FontWeight.normal,
-  //       height: 1
-  //     ),)
-  //     ),
-  //       ]
-  //     )
-  //   );
-
+}
 }

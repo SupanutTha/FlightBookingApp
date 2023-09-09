@@ -68,8 +68,12 @@ class ApiService {
         'Authorization': 'Bearer $accessToken',
       },
     );
-
+    print(outboundResponse.statusCode);
+    print(searchData.returnDate);
     // 2. Search for return flights
+    if (searchData.returnDate == null){
+      searchData.returnDate = searchData.departureDate;
+    }
     final returnDate = dateFormatter.format(searchData.returnDate!);
      print(returnDate);
     final returnResponse = await http.get(
@@ -80,7 +84,6 @@ class ApiService {
         'Authorization': 'Bearer $accessToken',
       },
     );
-    print(outboundResponse.statusCode);
     print(returnResponse.statusCode);
     if (outboundResponse.statusCode == 200 && returnResponse.statusCode == 200) {
     
