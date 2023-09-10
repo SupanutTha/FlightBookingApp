@@ -57,26 +57,14 @@ class _HomePageState extends State<HomePage> {
     departureDate: departureDate,
     returnDate: returnDate,
     cabinClass: cabinClass.toUpperCase(),
-    // isEconomicClass: _isSelectedClass[0],
-    // isPremiumEconomicClass: _isSelectedClass[1],
-    // isBusinessClass: _isSelectedClass[2],
-    // isFirstClass: _isSelectedClass[3],
-    // if true = ?
-    // false = :
-    // selectedDate: _isSelected[0]
-    //     ? _singleDatePickerValueWithDefaultValue[0] // pick one day
-    //     : null,
-    // selectedRange: _isSelected[1]
-    //     ? _rangeDatePickerWithActionButtonsWithValue // pick range of days
-    //     : [null, null],//first , last
   );
-
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ResultPage(searchData: searchData), // send data to result page
-    ),
-  );
+  
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ResultPage(searchData: searchData), // send data to result page
+      ),
+    );
 }
   void _onItemTapped(int index) {
     setState(() {
@@ -115,16 +103,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
   void updatePage(){
-    // buttonText = text;
-    // print('search value');
-    // print("departure $_departureController");
-    // print('arrival $_arrivalController');
-    // print('go date $_departureDateController');
-    // print('return date $_returnDateController');
-    // print('adult $_adultCountController');
-    // print('kid $_kidCountController');
-    // print("baby $_babyCountController");
-    // print('class $_classController');
     setState(() {
       
     });
@@ -239,6 +217,9 @@ class _HomePageState extends State<HomePage> {
                                             color:const Color(0xFFEC441E),
                                           ),
                                           onPressed: () {
+                                            String temp = _departureController.text;
+                                            _departureController.text = _arrivalController.text;
+                                            _arrivalController.text = temp;
                                             // do something
                                           },
                                         ),
@@ -282,98 +263,85 @@ class _HomePageState extends State<HomePage> {
                                 Row( // button select departure Date and Return date
                                   children: [
                                     Row( // button select departure Date and Return date
-  children: [
-    Visibility(
-      visible: !isRoundTrip, // Show "Departure date" button when not round trip
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: 35, top: 10, right: 25),
-        child: DynamicTextButton(
-          textController: _departureDateController != null
-            ? DateFormat('E, d MMM yy').format(_departureDateController!)
-            : 'Departure date',
-          buttonText: 'Departure date',
-          icon: Icons.calendar_month,
-          buttonAction: SingleDatePickPopUp(
-            controller: _departureDateController,
-            //selectedDate: _singleDatePickerValueWithDefaultValue,
-            callback: (DateTime? selectedDate){
-              setState(() {
-                _departureDateController = selectedDate;
-              });
-            },
-          ),
-        ),
-      ),
-    ),
-    Visibility(
-      visible: isRoundTrip, // Show a different button for round trips
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: 35, top: 10, right: 25),
-        child: DynamicTextButton(
-          textController: _departureDateController != null
-            ? DateFormat('E, d MMM yy').format(_departureDateController!)
-            : 'Departure date',
-          buttonText: 'Departure date',
-          icon: Icons.calendar_month,
-          buttonAction: RangeDatePickPopUp(
-            isDepartureButton: true,
-            departureDateController: _departureDateController,
-            returnDateController: _returnDateController,
-            //selectedDate: _rangeDatePickerWithActionButtonsWithValue,
-            callback: (DateTime? selectedDateDeparture , DateTime? selectedDateReturn){
-              setState(() {
-                _departureDateController = selectedDateDeparture;
-                _returnDateController = selectedDateReturn;
-              });
-            },
-          ),
-        ),
-      ),
-    ),
-    Visibility( // return date
-      visible: isRoundTrip && _departureDateController != null ,
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: 3, top: 10),
-        child: DynamicTextButton(
-          textController: _returnDateController != null
-            ? DateFormat('E, d MMM yy').format(_returnDateController!)
-            : 'Return date',
-          buttonText: 'Return date',
-          icon: Icons.calendar_month,
-          buttonAction: RangeDatePickPopUp(
-            isDepartureButton: false,
-            departureDateController: _departureDateController,
-            returnDateController: _returnDateController,
-            //selectedDate: _rangeDatePickerWithActionButtonsWithValue,
-            callback: (DateTime? selectedDateDeparture , DateTime? selectedDateReturn){
-              setState(() {
-                _departureDateController = selectedDateDeparture;
-                _returnDateController = selectedDateReturn;
-              });
-            },
-          ),
-        ),
-      ),
-    ),
-  ],
-)
+                                      children: [
+                                      Visibility(
+                                        visible: !isRoundTrip, // Show "Departure date" button when not round trip
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 35, top: 10, right: 25),
+                                          child: DynamicTextButton(
+                                            textController: _departureDateController != null
+                                              ? DateFormat('E, d MMM yy').format(_departureDateController!)
+                                              : 'Departure date',
+                                            buttonText: 'Departure date',
+                                            icon: Icons.calendar_month,
+                                            buttonAction: SingleDatePickPopUp(
+                                              controller: _departureDateController,
+                                              //selectedDate: _singleDatePickerValueWithDefaultValue,
+                                              callback: (DateTime? selectedDate){
+                                                setState(() {
+                                                  _departureDateController = selectedDate;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: isRoundTrip, // Show a different button for round trips
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 35, top: 10, right: 25),
+                                          child: DynamicTextButton(
+                                            textController: _departureDateController != null
+                                              ? DateFormat('E, d MMM yy').format(_departureDateController!)
+                                              : 'Departure date',
+                                            buttonText: 'Departure date',
+                                            icon: Icons.calendar_month,
+                                            buttonAction: RangeDatePickPopUp(
+                                              isDepartureButton: true,
+                                              departureDateController: _departureDateController,
+                                              returnDateController: _returnDateController,
+                                              //selectedDate: _rangeDatePickerWithActionButtonsWithValue,
+                                              callback: (DateTime? selectedDateDeparture , DateTime? selectedDateReturn){
+                                                setState(() {
+                                                  _departureDateController = selectedDateDeparture;
+                                                  _returnDateController = selectedDateReturn;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Visibility( // return date
+                                        visible: isRoundTrip && _departureDateController != null ,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 3, top: 10),
+                                          child: DynamicTextButton(
+                                            textController: _returnDateController != null
+                                              ? DateFormat('E, d MMM yy').format(_returnDateController!)
+                                              : 'Return date',
+                                            buttonText: 'Return date',
+                                            icon: Icons.calendar_month,
+                                            buttonAction: RangeDatePickPopUp(
+                                              isDepartureButton: false,
+                                              departureDateController: _departureDateController,
+                                              returnDateController: _returnDateController,
+                                              //selectedDate: _rangeDatePickerWithActionButtonsWithValue,
+                                              callback: (DateTime? selectedDateDeparture , DateTime? selectedDateReturn){
+                                                setState(() {
+                                                  _departureDateController = selectedDateDeparture;
+                                                  _returnDateController = selectedDateReturn;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
 
-                                    // Padding( // departure date
-                                    //   padding: const EdgeInsets.only(
-                                    //       left: 35, top: 10, right: 25),
-                                    //       child: DynamicTextButton(textController: _departureDateController.text, buttonText: 'Departure date', icon: Icons.calendar_month, buttonAction: SingleDatePickPopUp(controller: _departureDateController, selectedDate: _singleDatePickerValueWithDefaultValue , callback: updatePage,)),
-                                    // ),
-                                    // Visibility( // return date
-                                    //   visible: isRoundTrip,
-                                    //   child: Padding(
-                                    //     padding: const EdgeInsets.only(
-                                    //         left: 20, top: 10),
-                                    //         child: DynamicTextButton(textController: _returnDateController.text, buttonText: 'Return date', icon: Icons.calendar_month, buttonAction: SingleDatePickPopUp(controller: _returnDateController , selectedDate: _singleDatePickerValueWithDefaultValue, callback: updatePage,)),
-                                    //   ),
-                                    // ),
                                   ],
                                 ),
                                 Row( // text Traveler and Class 
@@ -447,16 +415,10 @@ class _HomePageState extends State<HomePage> {
                                       ],
                                     ),
                                     onPressed: () {
-                                      print(_departureController.text.toString());
-                                      print(_arrivalController.text.toString());
-                                      print(_departureDateController);
-                                      print(_returnDateController);
-                                      print(_classController);
-                                      print(_adultCountController);
-                                      print(_kidCountController);
-                                      print(_babyCountController);
-
-                                      _navigateToResultPage();
+                                      //print(_departureController);
+                                      if ( _departureController != null && _arrivalController != null && _departureDateController != null){
+                                        _navigateToResultPage();
+                                      }                                     
                                     },
                                   ),
                                 ),
@@ -472,7 +434,7 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: [
                         Text(
-                          'Go away!     ',
+                          'Go a Where!     ',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               color: Color.fromRGBO(255, 255, 255, 1),

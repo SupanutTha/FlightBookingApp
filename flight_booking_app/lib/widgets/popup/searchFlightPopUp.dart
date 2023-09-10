@@ -30,6 +30,7 @@ class _SearchFlightPopUpState extends State<SearchFlightPopUp> {
     // Clear everything in the text field
     widget.controller.clear();
     // Call setState to update the UI
+    widget.callback();
     setState(() {});
   }
   @override

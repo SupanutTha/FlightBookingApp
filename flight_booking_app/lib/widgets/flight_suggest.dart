@@ -3,8 +3,13 @@
 import 'package:flight_booking_app/models/airline_db.dart';
 import 'package:flight_booking_app/models/flight.dart';
 import 'package:flight_booking_app/utilities/database_helper.dart';
+import 'package:flight_booking_app/widgets/dynamic_text_button.dart';
+import 'package:flight_booking_app/widgets/popup/flightDetailPopUp.dart';
+import 'package:flight_booking_app/widgets/xen_popup/xen_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import 'xen_popup/xen_card.dart';
 
 class FlightSuggestList extends StatelessWidget {
   final List<Flight> flightSuggestions;
@@ -33,70 +38,25 @@ class FlightSuggestList extends StatelessWidget {
   }
 
   final dbHelper = DatabaseHelper.instance;
-  Future<String> findCityAndCountry(String iata) async {
-    final airports = await dbHelper.retrieveAirports();
-    final matchingAirport = airports.firstWhere(
-      (airport) => airport.iata.toUpperCase() == iata.toUpperCase(),
-    );
-
-    if (matchingAirport != null) {
-      final cityAndCountry = '${matchingAirport.city}, ${matchingAirport.country}';
-      return cityAndCountry;
-    } else {
-      // Handle the case where no matching airport was found.
-      return 'Unknown';
-    }
-  }
-  // Future<String> findLogo(String iata) async {
-  //   final logo = await dbHelper.retrieveAirlinesLogo();
-  //   final airline = await dbHelper.retrieveAirlines();
-  //   final matchingAirline = airline.firstWhere(
-  //     (airline) => airline.iata.toUpperCase() == iata.toUpperCase(),
+  // Future<String> findCityAndCountry(String iata) async {
+  //   final airports = await dbHelper.retrieveAirports();
+  //   final matchingAirport = airports.firstWhere(
+  //     (airport) => airport.iata.toUpperCase() == iata.toUpperCase(),
   //   );
 
-  //   if (matchingAirline != null) {
-  //     final airlineName = matchingAirline.name;
-  //     final matchLogo = logo.firstWhere(
-  //       (logo) => logo.name.toUpperCase() == airlineName);
-  //       if(matchLogo != null){
-  //         final logoPic = matchLogo.logo;
-  //         return logoPic;
-  //       }
-  //       else{
-  //         return 'Unknow';
-  //       }
+  //   if (matchingAirport != null) {
+  //     final cityAndCountry = '${matchingAirport.city}, ${matchingAirport.country}';
+  //     return cityAndCountry;
   //   } else {
   //     // Handle the case where no matching airport was found.
   //     return 'Unknown';
   //   }
   // }
 
-  Future<String> findLogo(String iata) async {
-    final logo = await dbHelper.retrieveAirlinesLogo();
-    final airline = await dbHelper.retrieveAirlines();
-    final matchingAirline = airline.firstWhere(
-      (airline) => airline.iata.toUpperCase() == iata.toUpperCase(),
-      // orElse: () => Airline(), // Provide a default value if not found
-    );
+  
+ 
 
-    if (matchingAirline.name != null) {
-      final airlineName = matchingAirline.name;
-      final matchLogo = logo.firstWhere(
-        (logo) => logo.name.toUpperCase() == airlineName.toUpperCase(),
-        // orElse: () => AirlineLogo(), // Provide a default value if not found
-      );
 
-      if (matchLogo.logo != null) {
-        final logoPic = matchLogo.logo;
-        return logoPic;
-      } else {
-        return 'Unknown';
-      }
-    } else {
-      // Handle the case where no matching airline was found.
-      return 'Unknown';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +71,7 @@ class FlightSuggestList extends StatelessWidget {
                 String departureTime = segments[0]['departure']['at'];
                 String arrivalTime = segments[connectingFlight-1]['arrival']['at'];
               List<String> result = [carrierCode,flightNumber,duration,departureIataCode,arrivalIataCode,departureTime,arrivalTime];
-  return Container(
+    return Container(
     padding: EdgeInsets.only(top: 15),
     alignment: Alignment.topCenter,
     child: Container(
@@ -147,7 +107,7 @@ class FlightSuggestList extends StatelessWidget {
                 Expanded(
                     flex: 3,
                     child: FutureBuilder<String>(
-                      future: findLogo(result[0]),
+                      future: dbHelper.findLogo(result[0]),
                       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return CircularProgressIndicator();
@@ -180,7 +140,7 @@ class FlightSuggestList extends StatelessWidget {
                     children: [
                       Text(departureIataCode ,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
                       FutureBuilder<String>(
-                      future: findCityAndCountry(departureIataCode),
+                      future: dbHelper.findCityAndCountry(departureIataCode),
                       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return CircularProgressIndicator(); // Display a loading indicator while waiting.
@@ -208,7 +168,7 @@ class FlightSuggestList extends StatelessWidget {
                   children: [
                     Text(arrivalIataCode ,style: TextStyle(fontSize: 20 , fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
                     FutureBuilder<String>(
-                      future: findCityAndCountry(arrivalIataCode),
+                      future: dbHelper.findCityAndCountry(arrivalIataCode),
                       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return CircularProgressIndicator(); // Display a loading indicator while waiting.
@@ -265,11 +225,12 @@ class FlightSuggestList extends StatelessWidget {
                 Expanded(flex :2 ,child: Row(
                   children: [
                     Text("Price"),
-                    Text(' \$${double.parse(flight.price['grandTotal']).toInt()}' ,style: TextStyle(fontSize: 18 , fontWeight: FontWeight.bold),)
+                    Text(' \$${double.parse(flight.price['grandTotal']).toInt()}' ,style: TextStyle(fontSize: 16 , fontWeight: FontWeight.bold),)
                   ],
                 ))
               ],
             ),
+            //DynamicTextButton(textController: '', buttonText: "Check Flight", icon: Icons.check, buttonAction: FlightDetailPopUp())
           OutlinedButton(
               style: OutlinedButton.styleFrom(
                 primary: Colors.black,
@@ -288,8 +249,14 @@ class FlightSuggestList extends StatelessWidget {
                   ),),
                 ],
               ),
-              onPressed: () {
-                
+              onPressed: () async {
+                await showDialog(
+                  context: context,
+                  builder: (builder) => XenPopupCard(
+                  body: FlightDetailPopUp(flight: flight,),
+                    ),
+                  );
+                 
               },
             ),
           ],

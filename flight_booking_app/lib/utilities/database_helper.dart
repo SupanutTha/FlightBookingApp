@@ -264,6 +264,47 @@ Future<List<Airline>> retrieveAirlines() async {
   Airline? airline = await getAirlineByCode(carrierCode);
   return airline?.name ?? "Unknown Airline";
 }
+Future<String> findCityAndCountry(String iata) async {
+    final airports = await retrieveAirports();
+    final matchingAirport = airports.firstWhere(
+      (airport) => airport.iata.toUpperCase() == iata.toUpperCase(),
+    );
+
+    if (matchingAirport != null) {
+      final cityAndCountry = '${matchingAirport.city}, ${matchingAirport.country}';
+      return cityAndCountry;
+    } else {
+      // Handle the case where no matching airport was found.
+      return 'Unknown';
+    }
+  }
+
+   Future<String> findLogo(String iata) async {
+    final logo = await retrieveAirlinesLogo();
+    final airline = await retrieveAirlines();
+    final matchingAirline = airline.firstWhere(
+      (airline) => airline.iata.toUpperCase() == iata.toUpperCase(),
+      // orElse: () => Airline(), // Provide a default value if not found
+    );
+
+    if (matchingAirline.name != null) {
+      final airlineName = matchingAirline.name;
+      final matchLogo = logo.firstWhere(
+        (logo) => logo.name.toUpperCase() == airlineName.toUpperCase(),
+         orElse: () => AirlineLogo(name: '', id: '', lcc: '', logo: 'https://www.iconsdb.com/icons/preview/red/error-7-xxl.png'), // Provide a default value if not found
+      );
+
+      if (matchLogo.logo != null) {
+        final logoPic = matchLogo.logo;
+        return logoPic;
+      } else {
+        return 'Unknown';
+      }
+    } else {
+      // Handle the case where no matching airline was found.
+      return 'Unknown';
+    }
+  }
 
 // Future<void> importAirlineLogoDataFromJson() async {
 //   final jsonData = await fetchAirlineLogoJsonData(); // Replace with your JSON loading logic
