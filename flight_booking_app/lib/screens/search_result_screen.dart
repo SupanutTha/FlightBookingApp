@@ -23,7 +23,6 @@ class _ResultPageState extends State<ResultPage>{
   List<Flight> _searchResultsReturn = [];
   bool _isLoading = true; // to check that can access token
   String _sortingOption = 'Default'; // Default sorting option
-  bool _sortAscending = true; // Default sorting order
 
   
   @override
@@ -58,6 +57,7 @@ class _ResultPageState extends State<ResultPage>{
 
   @override
   Widget build(BuildContext context) {
+    print(_searchResults);
     return  Scaffold(
       backgroundColor: Colors.white,
         body: Stack(
@@ -90,10 +90,10 @@ class _ResultPageState extends State<ResultPage>{
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (BuildContext context, int index) {
-                    return FlightSuggestList(
+                      return FlightSuggestList(
                       flightSuggestions: _searchResults,
                       index: index,
-                    );
+                      );
                   },
                   childCount: _searchResults.length,
                 ),
@@ -101,9 +101,13 @@ class _ResultPageState extends State<ResultPage>{
               ],
             ),
             if (_isLoading)
-          Center(
-            child: Lottie.asset('assets/json/lottie/animation_flight.json')
-          ),
+              Center(
+                child: Lottie.asset('assets/json/lottie/animation_flight.json')
+              ),
+            if (_searchResults.isEmpty && !_isLoading) // Show only if not loading
+              Center(
+                child: Text("Flight not found"),
+              ),
            ],
         ),
       );
