@@ -43,6 +43,7 @@ class _HomePageState extends State<HomePage> {
   // if (_departureDateController  == null) {
   //   departureDate = DateTime.parse(_departureDateController);
   // }
+
   DateTime? returnDate = _returnDateController;
   // if (_returnDateController.text.isNotEmpty) {
   //   returnDate = DateTime.parse(_returnDateController.text);
@@ -71,11 +72,15 @@ class _HomePageState extends State<HomePage> {
       _selectedIndex = index;
     });
   }
-  void onToggleChanged(int index) {
-    setState(() {
-      isRoundTrip = index == 1;
-    });
-  }
+  void _onToggleChanged(int index) {
+  setState(() {
+    isRoundTrip = index == 1;
+    if (!isRoundTrip) {
+      _returnDateController = null; // Clear returnDate when One way is selected
+    }
+  });
+}
+
   void updateTotalTravellers(String title, int value) {
     print('1 $title : $value');
     // Parse the values from the controllers and calculate the total
@@ -107,6 +112,7 @@ class _HomePageState extends State<HomePage> {
       
     });
   }
+
   
   @override
   Widget build(BuildContext context) {
@@ -166,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                               ],
                               // initialSelection: [true, false],
                               initialSelection: [!isRoundTrip, isRoundTrip],
-                              onToggleChanged:  onToggleChanged,
+                              onToggleChanged:  _onToggleChanged,
                             ),
                           ),
                           Column( // in side big  white box
@@ -220,6 +226,7 @@ class _HomePageState extends State<HomePage> {
                                             String temp = _departureController.text;
                                             _departureController.text = _arrivalController.text;
                                             _arrivalController.text = temp;
+                                            updatePage();
                                             // do something
                                           },
                                         ),
@@ -415,9 +422,18 @@ class _HomePageState extends State<HomePage> {
                                       ],
                                     ),
                                     onPressed: () {
-                                      //print(_departureController);
-                                      if ( _departureController != null && _arrivalController != null && _departureDateController != null){
-                                        _navigateToResultPage();
+                                      print(_departureController.text);
+                                      print(_arrivalController.text);
+                                      print(_departureDateController);
+                                      print(_returnDateController);
+                                      print("what?");
+                                      if ( 
+                                        _departureController.text.isNotEmpty 
+                                        && _arrivalController.text.isNotEmpty 
+                                        && _departureDateController != null)
+                                      {
+                                        //print("let go");
+                                         _navigateToResultPage();
                                       }                                     
                                     },
                                   ),
