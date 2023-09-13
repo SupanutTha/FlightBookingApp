@@ -38,7 +38,8 @@ class _SearchFlightPopUpState extends State<SearchFlightPopUp> {
     return WillPopScope(
       onWillPop: () async {
         // Reset the value of the TextField
-       widget.controller.text = '';
+       widget.controller.text =   '';
+       widget.callback();
         return true; // Allow the back navigation
       },
       child: Scaffold(

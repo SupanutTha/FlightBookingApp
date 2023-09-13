@@ -33,6 +33,7 @@ class _ReturnFlightState extends State<ReturnFlight>{
   @override
   void initState()   {
     _searchResultsReturn = widget.returnFlight;
+     _originalSearchResults = List.from(_searchResultsReturn);
     super.initState();
   }
   void _sortResults(String option, List<Flight> sortedResults) {
