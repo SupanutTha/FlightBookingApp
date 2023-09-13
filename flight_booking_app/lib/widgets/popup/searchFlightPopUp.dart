@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'package:flight_booking_app/widgets/suggestion_list.dart';
+import 'package:flight_booking_app/widgets/suggest_list/suggestion_list.dart';
 import 'package:flutter/material.dart';
 
 class SearchFlightPopUp extends StatefulWidget{

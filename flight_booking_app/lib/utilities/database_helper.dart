@@ -247,23 +247,24 @@ Future<List<Airline>> retrieveAirlines() async {
   }
 }
 
-  Future<Airline?> getAirlineByCode(String iata) async {
-    final maps = await _airlineDatabase?.query(
-      'airlines',
-      columns: ['name', 'iata'],
-      where: 'itata = ?',
-      whereArgs: [iata],
-    );
-    if (maps!.isNotEmpty) {
-      return Airline.fromMap(maps.first);
-    }
-    return null;
-  }
+Future<String> getAirlineNameByCode(String iata) async {
+  final maps = await _airlineDatabase?.query(
+    'airlines',
+    columns: ['name'],
+    where: 'iata = ?',
+    whereArgs: [iata],
+  );
 
-  Future<String> getAirlineName(String carrierCode) async {
-  Airline? airline = await getAirlineByCode(carrierCode);
-  return airline?.name ?? "Unknown Airline";
+  if (maps != null && maps.isNotEmpty) {
+    final name = maps.first['name'];
+    if (name != null) {
+      return name.toString();
+    }
+  }
+  return 'Unknown Airline';
 }
+
+
 Future<String> findCityAndCountry(String iata) async {
     final airports = await retrieveAirports();
     final matchingAirport = airports.firstWhere(
@@ -306,16 +307,20 @@ Future<String> findCityAndCountry(String iata) async {
     }
   }
 
-// Future<void> importAirlineLogoDataFromJson() async {
-//   final jsonData = await fetchAirlineLogoJsonData(); // Replace with your JSON loading logic
-//   await insertAirlineLogoJsonToDatabase(jsonData);
-// }
+  Future<String> findAirportNameByIATA(String iata) async {
+  final airports = await retrieveAirports();
+  final matchingAirport = airports.firstWhere(
+    (airport) => airport.iata.toUpperCase() == iata.toUpperCase(),
+    orElse: () => Airport(objectID: '', name: 'Unknown', city: '', country: '', iata: '', lat: 0, lon: 0, linksCount: 0), // Provide a default value if not found
+  );
 
-// Future<List<dynamic>> fetchAirlineLogoJsonData() async {
-//   final String jsonString = await rootBundle.loadString('assets/json/airline_logo_data.json');
-//   final List<dynamic> jsonData = json.decode(jsonString);
-//   return jsonData;
-// }
+  if (matchingAirport != null) {
+    return matchingAirport.name;
+  } else {
+    // Handle the case where no matching airport was found.
+    return 'Unknown';
+  }
+}
 
 
 }

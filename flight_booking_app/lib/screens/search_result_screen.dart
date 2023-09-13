@@ -5,7 +5,7 @@ import 'package:flight_booking_app/models/flight_search_data.dart';
 import 'package:flight_booking_app/utilities/api_service.dart';
 import 'package:flight_booking_app/widgets/chip_select.dart';
 import 'package:flutter/material.dart';
-import 'package:flight_booking_app/widgets/flight_suggest.dart';
+import 'package:flight_booking_app/widgets/suggest_list/flight_suggest_list.dart';
 import 'package:lottie/lottie.dart';
 
 class ResultPage extends StatefulWidget{
@@ -22,8 +22,8 @@ class _ResultPageState extends State<ResultPage>{
   List<Flight> _searchResults = [];
   List<Flight> _searchResultsReturn = [];
   bool _isLoading = true; // to check that can access token
-  String _sortingOption = 'Default'; // Default sorting option
-
+  String _sortingOption = 'Cheapest'; // Default sorting option
+  List<Flight> _originalSearchResults = [];
   
   @override
   void initState()   {
@@ -39,8 +39,10 @@ class _ResultPageState extends State<ResultPage>{
   Future<void> _fetchFlightResults() async {
     try {
       var searchTuple = await ApiService.searchFlights(widget.searchData);
-      _searchResults = searchTuple.$1;
-      _searchResultsReturn = searchTuple.$2;
+      print(searchTuple[1].length);
+      _searchResults = searchTuple[0];
+      _searchResultsReturn = searchTuple[1];
+      _originalSearchResults = List.from(_searchResults);
       print('1 $_searchResults');
       print('2 $_searchResultsReturn');
       setState(() {
@@ -57,7 +59,7 @@ class _ResultPageState extends State<ResultPage>{
 
   @override
   Widget build(BuildContext context) {
-    print(_searchResults);
+    //print(_searchResults);
     return  Scaffold(
       backgroundColor: Colors.white,
         body: Stack(
@@ -81,6 +83,7 @@ class _ResultPageState extends State<ResultPage>{
                     child : ActionChoiceExample(
                       onSortOptionSelected: _sortResults, 
                       searchResults: _searchResults, 
+                      originalSearchResults: _originalSearchResults,
                       selectedOption: _sortingOption,
                       )
                   ),
@@ -92,7 +95,9 @@ class _ResultPageState extends State<ResultPage>{
                   (BuildContext context, int index) {
                       return FlightSuggestList(
                       flightSuggestions: _searchResults,
-                      index: index,
+                      flightReturn: _searchResultsReturn,
+                      index: index, 
+                      isReturnScreen: false,
                       );
                   },
                   childCount: _searchResults.length,

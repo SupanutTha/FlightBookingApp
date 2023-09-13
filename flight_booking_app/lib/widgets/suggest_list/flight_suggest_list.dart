@@ -9,55 +9,32 @@ import 'package:flight_booking_app/widgets/xen_popup/xen_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'xen_popup/xen_card.dart';
+import '../xen_popup/xen_card.dart';
 
 class FlightSuggestList extends StatelessWidget {
   final List<Flight> flightSuggestions;
+  final List<Flight> flightReturn;
+  final bool isReturnScreen;
   final int index;
 
-  FlightSuggestList({required this.flightSuggestions, required this.index});
+  FlightSuggestList({required this.flightSuggestions, required this.index, required this.flightReturn, required this.isReturnScreen});
 
-  String convertDuration(String durationString) {
-  Duration duration = Duration();
-  final hoursMatch = RegExp(r'(\d+)H').firstMatch(durationString);
-  final minutesMatch = RegExp(r'(\d+)M').firstMatch(durationString);
-  if (hoursMatch != null) {
-    final hours = int.parse(hoursMatch.group(1)!);
-    duration += Duration(hours: hours);
-  }
 
-  if (minutesMatch != null) {
-    final minutes = int.parse(minutesMatch.group(1)!);
-    duration += Duration(minutes: minutes);
-  }
-
-  final hours = duration.inHours.toString().padLeft(2, '0');
-  final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
-
+  String calculateDuration(String departureTime, String arrivalTime) {
+  DateTime departureDateTime = DateTime.parse(departureTime);
+  DateTime arrivalDateTime = DateTime.parse(arrivalTime);
+  
+  Duration duration = arrivalDateTime.difference(departureDateTime);
+  
+  int hours = duration.inHours;
+  int minutes = duration.inMinutes.remainder(60);
+  
   return '$hours hr $minutes min';
-  }
+}
+
 
   final dbHelper = DatabaseHelper.instance;
-  // Future<String> findCityAndCountry(String iata) async {
-  //   final airports = await dbHelper.retrieveAirports();
-  //   final matchingAirport = airports.firstWhere(
-  //     (airport) => airport.iata.toUpperCase() == iata.toUpperCase(),
-  //   );
-
-  //   if (matchingAirport != null) {
-  //     final cityAndCountry = '${matchingAirport.city}, ${matchingAirport.country}';
-  //     return cityAndCountry;
-  //   } else {
-  //     // Handle the case where no matching airport was found.
-  //     return 'Unknown';
-  //   }
-  // }
-
-  
  
-
-
-
   @override
   Widget build(BuildContext context) {
     final flight = flightSuggestions[index];
@@ -128,7 +105,8 @@ class FlightSuggestList extends StatelessWidget {
                       },
                     ),
                   ),
-                Expanded(flex :1 ,child: Text(convertDuration(duration)))
+                Expanded(flex :1 ,child: Text(calculateDuration(departureTime, arrivalTime)
+))
               ],
             ),
             Row( // iata city country
@@ -243,7 +221,7 @@ class FlightSuggestList extends StatelessWidget {
                 children: [
                   Icon(Icons.search , color: Colors.white,),
                   SizedBox(height: 55,), 
-                  Text('Search Flights',
+                  Text('Check Flight',
                   style: TextStyle(
                     color: Color.fromRGBO(255, 255, 255, 1),
                   ),),
@@ -253,7 +231,11 @@ class FlightSuggestList extends StatelessWidget {
                 await showDialog(
                   context: context,
                   builder: (builder) => XenPopupCard(
-                  body: FlightDetailPopUp(flight: flight,),
+                  body: FlightDetailPopUp(
+                    flight: flight,
+                    returnFlight: flightReturn,
+                    isReturn: isReturnScreen,
+                    ),
                     ),
                   );
                  

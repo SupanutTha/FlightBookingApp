@@ -12,7 +12,7 @@ class ApiService {
       final tokenUrl = 'https://test.api.amadeus.com/v1/security/oauth2/token';
       final clientId = 'PBjFEhvGHXAzDb6blW0BRCcORKTiZKMj';
       final clientSecret = '4Pf1CUcDoTBgL5DB';
-      print("check token"); 
+      // print("check token"); 
       final response = await http.post( // call api for amadeus to gain acess token
         Uri.parse('$tokenUrl'),
         headers: {
@@ -28,7 +28,7 @@ class ApiService {
       if (response.statusCode == 200) {
         AccessToken accessToken = AccessToken.fromJson(json.decode(response.body));
         //searchFlights(accessToken);
-        print("token grain");
+        // print("token grain");
         return accessToken.accessToken;
       } else {
         throw Exception('Failed to retrieve access token');
@@ -40,7 +40,7 @@ class ApiService {
     }
   }
 
-  static Future<(List<Flight>, List<Flight>)> searchFlights( FlightSearchData searchData) async {
+  static Future<List<List<Flight>>> searchFlights( FlightSearchData searchData) async {
     final accessToken = await getAccessToken();
   try {
 
@@ -69,7 +69,7 @@ class ApiService {
       },
     );
     print(outboundResponse.statusCode);
-    print(searchData.returnDate);
+    print('return date :${searchData.returnDate}');
     // 2. Search for return flights
     if (searchData.returnDate == null){
       searchData.returnDate = searchData.departureDate;
@@ -97,6 +97,7 @@ class ApiService {
 
 
       print("out flight: ${numOutboundResults}");
+      print("return flight: ${numReturnResults}");
 
       // check that it dont add flight in list more than maximum
       // it not working propaly if the flight that can search less than maximum = bug ;-;
@@ -107,13 +108,12 @@ class ApiService {
         returnFlightData = returnFlightData.sublist(0, maxFlights); // Take only the first 'max' flight results
       }
 
-      print("check maximum flight limit if");
-      print(outboundFlightData);
+      // print(outboundFlightData);
+      // print(returnFlightData);
       List<Flight> outboundResults = outboundFlightData.map((flight) => Flight.fromJson(flight)).toList(); //change json to list
       List<Flight> returnResults = returnFlightData.map((flight) => Flight.fromJson(flight)).toList(); // change jason to list
-      print("check");
-      // print("out flight: ${outboundResults}");
-      // print("in flight: ${returnResults}");
+      print("out flight: ${outboundResults}");
+      print("in flight: ${returnResults}");
 
       // Combine outbound and return results into a single list
       List<Flight> resultsOut = [];
@@ -123,10 +123,13 @@ class ApiService {
 
       // if the bug that one way trip show flight back trip by if one way trip not adding flight back trip in list
       List<Flight> resultsIn = [];
-      if (searchData.departureDate == null){
+      print(departureDate);
+      print(returnData);
+      if (departureDate != returnDate){
         resultsIn.addAll(returnResults);
       }
-      return (resultsOut,resultsIn);
+      
+      return [resultsOut,resultsIn];
 
       
         // print("set state");
