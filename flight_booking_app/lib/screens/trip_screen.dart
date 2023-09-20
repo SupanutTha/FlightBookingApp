@@ -7,6 +7,7 @@ import 'package:flight_booking_app/models/save_flight.dart';
 import 'package:flight_booking_app/models/selected_flights.dart';
 import 'package:flight_booking_app/screens/home_screen.dart';
 import 'package:flight_booking_app/screens/trip_summary2.dart';
+import 'package:flight_booking_app/screens/trip_summary_extre.dart';
 import 'package:flight_booking_app/utilities/api_service.dart';
 import 'package:flight_booking_app/utilities/database_helper.dart';
 import 'package:flight_booking_app/widgets/chip_select.dart';
@@ -82,7 +83,7 @@ class _TripScreenState extends State<TripScreen>{
                         } 
                   Navigator.of(context).push(             
                     MaterialPageRoute(
-                      builder: (context) => SummaryFlight2(),
+                      builder: (context) => SummaryFlightExtra(),
                     ),
                   );
                 },
