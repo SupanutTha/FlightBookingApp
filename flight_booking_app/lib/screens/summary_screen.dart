@@ -9,6 +9,7 @@ import 'package:flight_booking_app/widgets/chip_select.dart';
 import 'package:flight_booking_app/widgets/suggest_list/flight_detail_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flight_booking_app/widgets/suggest_list/flight_suggest_list.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 class SummaryFlight extends StatefulWidget{
@@ -29,6 +30,7 @@ class _SummaryFlightState extends State<SummaryFlight>{
   int connectingFlight =SelectedFlights.selectedFlights[0].itineraries[0]['segments'].length;
   @override
   Widget build(BuildContext context) {
+    
     print(SelectedFlights.selectedFlights[0].itineraries[0]['segments'].length);
     print(SelectedFlights.selectedFlights[0].itineraries[0]['segments'][0]['departure']['iataCode'] );
     int connectionFlight = SelectedFlights.selectedFlights[0].itineraries[0]['segments'].length;

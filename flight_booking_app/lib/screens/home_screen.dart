@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last
 
 import 'package:flight_booking_app/design/style.dart';
+import 'package:flight_booking_app/screens/trip_screen.dart';
 import 'package:flight_booking_app/widgets/toggle_button.dart';
 import 'package:flight_booking_app/widgets/pop_up_screen.dart';
 import 'package:flutter/material.dart';
@@ -70,6 +71,14 @@ class _HomePageState extends State<HomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (index == 1) {
+        // Navigate to the home page
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => TripScreen(), // Replace 'HomeScreen' with the actual name of your home page.
+          ),
+        );
+      }
     });
   }
   void _onToggleChanged(int index) {
@@ -486,12 +495,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
+            icon: Icon(Icons.airplane_ticket),
+            label: 'Trips',
           ),
         ],
         currentIndex: _selectedIndex,
