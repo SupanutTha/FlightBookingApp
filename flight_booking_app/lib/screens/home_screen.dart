@@ -129,6 +129,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       //appBar
       appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: const Text("Search Flight"),
           backgroundColor: const Color(0xFFEC441E),
           bottomOpacity: 0.0,
@@ -459,24 +460,24 @@ class _HomePageState extends State<HomePage> {
                     child: Column(
                       children: [
                         Text(
-                          'Go a Where!     ',
+                          'Go a Where!                 ',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               color: Color.fromRGBO(255, 255, 255, 1),
                               fontFamily: 'Amiri Quran Colored',
-                              fontSize: 40,
+                              fontSize: 35,
                               letterSpacing:
                                   0 /*percentages not used in flutter. defaulting to zero*/,
                               fontWeight: FontWeight.normal,
                               height: 1.125),
                         ),
                         Text(
-                          'some where',
+                          'Go Any Where you like',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                               color: Color.fromRGBO(255, 255, 255, 1),
                               fontFamily: 'Amiri Quran Colored',
-                              fontSize: 40,
+                              fontSize: 35,
                               letterSpacing:
                                   0 /*percentages not used in flutter. defaulting to zero*/,
                               fontWeight: FontWeight.normal,
