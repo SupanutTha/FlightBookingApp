@@ -271,7 +271,6 @@ class _SummaryFlight2State extends State<SummaryFlight2>{
 
                             // Add the selected flights to SaveFlights
                             SaveFlights.addSaveFlight(selectedFlightsToSave);
-
                             // Trip is now saved
                             isTripSaved = true;
                             Navigator.push(

@@ -9,6 +9,7 @@ import 'package:flight_booking_app/widgets/dynamic_text_button.dart';
 import 'package:intl/intl.dart';
 import '../models/flight_search_data.dart';
 import 'package:flight_booking_app/screens/search_result_screen.dart';
+
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -27,11 +28,6 @@ class _HomePageState extends State<HomePage> {
   DateTime? _returnDateController ;
   TextEditingController _classController = TextEditingController(text: 'Economy');
  
-  // List<DateTime?> _singleDatePickerValueWithDefaultValue = [DateTime.now(),];
-  // List<DateTime?> _rangeDatePickerWithActionButtonsWithValue = [ // calendar for round trip
-  //   DateTime.now(),
-  //   DateTime.now().add(const Duration(days: 0)),
-  // ];
   void _navigateToResultPage() { // send data to class flight_search_data
   // ?? = defualt value
   String departure = _departureController.text ;
@@ -91,7 +87,6 @@ class _HomePageState extends State<HomePage> {
 }
 
   void updateTotalTravellers(String title, int value) {
-    print('1 $title : $value');
     // Parse the values from the controllers and calculate the total
     var adultCount = int.tryParse(_adultCountController.text) ?? 0;
     var kidCount = int.tryParse(_kidCountController.text) ?? 0;
@@ -105,9 +100,7 @@ class _HomePageState extends State<HomePage> {
     else {
       babyCount +=1;
     }
-    print('2 $title : $value');
     var total = adultCount + kidCount + babyCount;
-    print('total = $total');
     // Update the sumTraveller variable with the total
     _adultCountController.text = adultCount.toString();
     _kidCountController.text = kidCount.toString();
@@ -432,17 +425,11 @@ class _HomePageState extends State<HomePage> {
                                       ],
                                     ),
                                     onPressed: () {
-                                      print(_departureController.text);
-                                      print(_arrivalController.text);
-                                      print(_departureDateController);
-                                      print(_returnDateController);
-                                      print("what?");
                                       if ( 
                                         _departureController.text.isNotEmpty 
                                         && _arrivalController.text.isNotEmpty 
                                         && _departureDateController != null)
                                       {
-                                        //print("let go");
                                          _navigateToResultPage();
                                       }                                     
                                     },
@@ -459,17 +446,20 @@ class _HomePageState extends State<HomePage> {
                     left: 37,
                     child: Column(
                       children: [
-                        Text(
-                          'Go a Where!                 ',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              color: Color.fromRGBO(255, 255, 255, 1),
-                              fontFamily: 'Amiri Quran Colored',
-                              fontSize: 35,
-                              letterSpacing:
-                                  0 /*percentages not used in flutter. defaulting to zero*/,
-                              fontWeight: FontWeight.normal,
-                              height: 1.125),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Go a Where!                 ',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Color.fromRGBO(255, 255, 255, 1),
+                                fontFamily: 'Amiri Quran Colored',
+                                fontSize: 35,
+                                letterSpacing:
+                                    0 /*percentages not used in flutter. defaulting to zero*/,
+                                fontWeight: FontWeight.normal,
+                                height: 1.125),
+                          ),
                         ),
                         Text(
                           'Go Any Where you like',

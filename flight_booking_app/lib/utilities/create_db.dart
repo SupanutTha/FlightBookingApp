@@ -34,6 +34,13 @@ class CreateDb{
   } catch (e) {
     print("Error initializing database: $e");
   }
+
+   try{
+     await DatabaseHelper.instance.saveFlightsDatabase;
+   print("airline logo Database initialized successfully");
+  } catch (e) {
+    print("Error initializing database: $e");
+  }
   
   // add data in database
   final jsonString = await dbHelper.loadAsset('assets/json/airports_data.json');

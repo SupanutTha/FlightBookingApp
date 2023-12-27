@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:flight_booking_app/models/flight.dart';
+
 import '/models/airline_db.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
@@ -12,6 +15,7 @@ class DatabaseHelper {
   static Database? _airportsDatabase;
   static Database? _airlineDatabase;
   static Database? _airlineLogoDatabase;
+  static Database? _saveFlightsDatabase;
 
   DatabaseHelper._init();
 
@@ -33,6 +37,13 @@ class DatabaseHelper {
     _airlineLogoDatabase = await _initAirlinesLogoDB('airlinesLogo.db');
     
     return _airlineLogoDatabase!;
+  }
+  
+  Future<Database> get saveFlightsDatabase async{
+    if(_saveFlightsDatabase != null) return _saveFlightsDatabase!;
+    _saveFlightsDatabase = await _initSaveFlightsDB('saveFlights.db');
+
+    return _saveFlightsDatabase!;
   }
 
 
@@ -56,6 +67,25 @@ class DatabaseHelper {
     print(path);
     return await openDatabase(path ,version: 1, onCreate: _createAirlinesLogoDB);
   }
+
+  Future<Database> _initSaveFlightsDB(String dbName) async {
+    final dbPath = await getDatabasesPath();
+    final path = join (dbPath, dbName);
+    print(path);
+    return await openDatabase(path ,version: 1, onCreate: _createSaveFlightDB);
+  }
+
+  Future<void> _createSaveFlightDB(Database db, int version) async {
+  final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT'; 
+  // Create the saveFlights table without any extra closing parenthesis
+  await db.execute('''
+    CREATE TABLE IF NOT EXISTS saveFlights (
+      objectID $idType,
+      saveFlights TEXT
+    )
+  ''');
+}
+
 
   Future<void> _createAirportsDB(Database db, int version) async {
   final idType = 'TEXT PRIMARY KEY NOT NULL'; // Assuming objectID is a string
@@ -125,7 +155,6 @@ class DatabaseHelper {
   }
 }
 
-
   Future<void> dropAirportsTable() async {
     final db = await instance.airportsDatabase;
     await db.execute('DROP TABLE IF EXISTS airports');
@@ -141,6 +170,41 @@ class DatabaseHelper {
     final db = await instance.airportsDatabase;
     return await db.insert('airports', airport.toMap());
   }
+
+Future<void> insertSaveFlightData(List<Flight> selectedFlights) async {
+  final db = await instance.saveFlightsDatabase;
+
+  // Serialize the selected flights to JSON
+  final flightListJson = selectedFlights.map((flight) => flight.toJson()).toList();
+  final flightListString = json.encode(flightListJson);
+
+  await db.insert(
+    'saveFlights',
+    {
+      'saveFlights': flightListString,
+    },
+  );
+  print('Flight data after insertion:');
+  // Retrieve the saved flight data from the database and print it
+  final savedFlights = await instance.retrieveSavedFlights();
+  savedFlights.forEach((flight) {
+    print(flight.toJson());
+  });
+}
+
+
+ Future<List<Flight>> retrieveSavedFlights() async {
+  final db = await saveFlightsDatabase;
+
+  final List<Map<String, dynamic>> maps = await db.query('saveFlights');
+
+  return List.generate(maps.length, (i) {
+    final flightListJson = json.decode(maps[i]['saveFlights']);
+    final flightList = List<Map<String, dynamic>>.from(flightListJson);
+    return Flight.fromJson(flightList[i]);
+  });
+}
+
 
   Future<List<AirlineLogo>> retrieveAirlinesLogo() async {
     final db = await instance.airlinesLogoDatabase;

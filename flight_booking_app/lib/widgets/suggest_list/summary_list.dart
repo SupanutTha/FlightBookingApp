@@ -3,7 +3,7 @@ import 'package:flight_booking_app/utilities/database_helper.dart';
 import 'package:flight_booking_app/widgets/popup/flightDetailPopUp.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:flight_booking_app/widgets/popup/flightDetailPopUpSummary';
+import 'package:flight_booking_app/widgets/popup/flightDetailPopUpSummary.dart';
 import '../xen_popup_card.dart';
 
 class SummaryFlightList extends StatelessWidget {
