@@ -50,15 +50,6 @@ class ApiService {
     final departureDate = dateFormatter.format(searchData.departureDate!); // change format date
     final maxFlights = 50; // Set the maximum number of flight results to display .now recommend 2 is maximun if set maximum more than it can search it gonna bug it list
 
-    print("check search");
-    print(searchData.departure);
-    print(searchData.arrival);
-    print(searchData.cabinClass);
-    print(departureDate);
-    print(searchData.adultCount);
-    print(searchData.kidCount);
-    print(searchData.babyCount);
-    print(accessToken);
     // 1. Search for outbound flights
     final outboundResponse = await http.get(
       Uri.parse(
@@ -68,14 +59,11 @@ class ApiService {
         'Authorization': 'Bearer $accessToken',
       },
     );
-    print(outboundResponse.statusCode);
-    print('return date :${searchData.returnDate}');
     // 2. Search for return flights
     if (searchData.returnDate == null){
       searchData.returnDate = searchData.departureDate;
     }
     final returnDate = dateFormatter.format(searchData.returnDate!);
-     print(returnDate);
     final returnResponse = await http.get(
       Uri.parse(
         '$baseUrl?originLocationCode=${searchData.arrival}&destinationLocationCode=${searchData.departure}&departureDate=$returnDate&adults=${searchData.adultCount}&children=${searchData.kidCount}&infants=${searchData.babyCount}&travelClass=${searchData.cabinClass}',
@@ -84,7 +72,6 @@ class ApiService {
         'Authorization': 'Bearer $accessToken',
       },
     );
-    print(returnResponse.statusCode);
     if (outboundResponse.statusCode == 200 && returnResponse.statusCode == 200) {
     
       Map<String, dynamic> outboundData = json.decode(outboundResponse.body);
@@ -96,8 +83,6 @@ class ApiService {
       int numReturnResults = returnFlightData.length;
 
 
-      print("out flight: ${numOutboundResults}");
-      print("return flight: ${numReturnResults}");
 
       // check that it dont add flight in list more than maximum
       // it not working propaly if the flight that can search less than maximum = bug ;-;
@@ -112,8 +97,8 @@ class ApiService {
       // print(returnFlightData);
       List<Flight> outboundResults = outboundFlightData.map((flight) => Flight.fromJson(flight)).toList(); //change json to list
       List<Flight> returnResults = returnFlightData.map((flight) => Flight.fromJson(flight)).toList(); // change jason to list
-      print("out flight: ${outboundResults}");
-      print("in flight: ${returnResults}");
+      // print("out flight: ${outboundResults}");
+      // print("in flight: ${returnResults}");
 
       // Combine outbound and return results into a single list
       List<Flight> resultsOut = [];

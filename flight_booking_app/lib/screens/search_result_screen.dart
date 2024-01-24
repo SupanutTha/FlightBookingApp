@@ -39,12 +39,9 @@ class _ResultPageState extends State<ResultPage>{
   Future<void> _fetchFlightResults() async {
     try {
       var searchTuple = await ApiService.searchFlights(widget.searchData);
-      print(searchTuple[1].length);
       _searchResults = searchTuple[0];
       _searchResultsReturn = searchTuple[1];
       _originalSearchResults = List.from(_searchResults);
-      print('1 $_searchResults');
-      print('2 $_searchResultsReturn');
       setState(() {
         _isLoading = false;
       });
@@ -52,14 +49,12 @@ class _ResultPageState extends State<ResultPage>{
       setState(() {
         _isLoading = false;
       });
-      print('Error: $e');
     }
   }
   
 
   @override
   Widget build(BuildContext context) {
-    //print(_searchResults);
     return  Scaffold(
       backgroundColor: Colors.white,
         body: Stack(

@@ -77,7 +77,6 @@ class DatabaseHelper {
 
   Future<void> _createSaveFlightDB(Database db, int version) async {
   final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT'; 
-  // Create the saveFlights table without any extra closing parenthesis
   await db.execute('''
     CREATE TABLE IF NOT EXISTS saveFlights (
       objectID $idType,
@@ -88,7 +87,7 @@ class DatabaseHelper {
 
 
   Future<void> _createAirportsDB(Database db, int version) async {
-  final idType = 'TEXT PRIMARY KEY NOT NULL'; // Assuming objectID is a string
+  final idType = 'TEXT PRIMARY KEY NOT NULL';
   final textType = 'TEXT NOT NULL';
 
   await db.execute('''
@@ -107,7 +106,7 @@ class DatabaseHelper {
 }
 
   Future<void> _createAirlinesDB(Database db, int version) async {
-  final idType = 'TEXT PRIMARY KEY NOT NULL'; // Assuming id is a string
+  final idType = 'TEXT PRIMARY KEY NOT NULL'; 
   final textType = 'TEXT NOT NULL';
   print("check2");
   await db.execute('''
@@ -126,7 +125,7 @@ class DatabaseHelper {
 }
 
   Future<void> _createAirlinesLogoDB (Database db , int version) async {
-    final idType = 'TEXT PRIMARY KEY NOT NULL'; // Assuming objectID is a string
+    final idType = 'TEXT PRIMARY KEY NOT NULL';
     final textType = 'TEXT NOT NULL';
     await db.execute('''
       CREATE TABLE IF NOT EXISTS airlinesLogo (
@@ -145,9 +144,9 @@ class DatabaseHelper {
   for (final json in jsonList) {
     final airlineLogo = AirlineLogo(
       id: json['id'],
-      lcc : json['lcc'], // Replace with the correct field name in your JSON data
-      name: json['name'], // Replace with the correct field name in your JSON data
-      logo: json['logo'], // Replace with the correct field name in your JSON data
+      lcc : json['lcc'], 
+      name: json['name'], 
+      logo: json['logo'],
     );
 
     await db.insert('airlinesLogo', airlineLogo.toMap());

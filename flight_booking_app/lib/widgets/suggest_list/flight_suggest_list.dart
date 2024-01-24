@@ -1,11 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:flight_booking_app/models/airline_db.dart';
 import 'package:flight_booking_app/models/flight.dart';
 import 'package:flight_booking_app/utilities/database_helper.dart';
-import 'package:flight_booking_app/widgets/dynamic_text_button.dart';
 import 'package:flight_booking_app/widgets/popup/flightDetailPopUp.dart';
-import 'package:flight_booking_app/widgets/xen_popup/xen_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

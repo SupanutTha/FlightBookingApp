@@ -1,20 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flight_booking_app/models/flight.dart';
-import 'package:flight_booking_app/models/flight_search_data.dart';
 import 'package:flight_booking_app/models/save_flight.dart';
 import 'package:flight_booking_app/models/selected_flights.dart';
 import 'package:flight_booking_app/screens/trip_screen.dart';
-import 'package:flight_booking_app/utilities/api_service.dart';
 import 'package:flight_booking_app/utilities/database_helper.dart';
-import 'package:flight_booking_app/widgets/chip_select.dart';
-import 'package:flight_booking_app/widgets/suggest_list/flight_detail_list.dart';
 import 'package:flight_booking_app/widgets/suggest_list/summary_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flight_booking_app/widgets/suggest_list/flight_suggest_list.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 
 class SummaryFlightExtra extends StatefulWidget{
 
@@ -50,16 +44,7 @@ class _SummaryFlightExtraState extends State<SummaryFlightExtra>{
   RegExp regExp = RegExp(r'(\d+\.\d+)');
   @override
   Widget build(BuildContext context) {
-    print(SelectedFlights.selectedFlights);
-    // Match match = regExp.firstMatch(SelectedFlights.selectedFlights[0].price.toString());
-    // if (match != null) {
-    //   // Extracted numeric value from the match
-    //   String numericValue = match.group(0);
-    //   price = double.parse(numericValue);
-    // } else {
-    //   // Handle the case where no numeric value was found
-    //   price = 0.0; // Or any other default value you prefer
-    // }
+    //print(SelectedFlights.selectedFlights);
 
     if (SelectedFlights.selectedFlights.length == 2){
       price = double.parse(SelectedFlights.selectedFlights[0].price['total'].toString()) + double.parse(SelectedFlights.selectedFlights[1].price['total'].toString());
@@ -67,9 +52,9 @@ class _SummaryFlightExtraState extends State<SummaryFlightExtra>{
     else{
       price = double.parse(SelectedFlights.selectedFlights[0].price['total'].toString());
     }
-    print(price);
-    print(SelectedFlights.selectedFlights[0].itineraries[0]['segments'].length);
-    print(SelectedFlights.selectedFlights[0].itineraries[0]['segments'][0]['departure']['iataCode'] );
+    // print(price);
+    // print(SelectedFlights.selectedFlights[0].itineraries[0]['segments'].length);
+    // print(SelectedFlights.selectedFlights[0].itineraries[0]['segments'][0]['departure']['iataCode'] );
     int connectionFlight = SelectedFlights.selectedFlights[0].itineraries[0]['segments'].length;
     return  WillPopScope(
       onWillPop: () async {
@@ -287,8 +272,8 @@ class _SummaryFlightExtraState extends State<SummaryFlightExtra>{
                           SelectedFlights.selectedFlights.clear();
 
                           // Verify that the lists are not connected
-                          print("Selected Flights after clearing: ${SelectedFlights.selectedFlights}");
-                          print("Saved Flights: ${SaveFlights.saveFlights}");
+                          // print("Selected Flights after clearing: ${SelectedFlights.selectedFlights}");
+                          // print("Saved Flights: ${SaveFlights.saveFlights}");
 
                           // Update the UI
                           //setState(() {});
@@ -307,64 +292,3 @@ class _SummaryFlightExtraState extends State<SummaryFlightExtra>{
     
   }
 }
-
-// }
-//                   Padding( // search button
-//                                   padding: const EdgeInsets.only(
-//                                      bottom: 20, left: 35, top: 20, right: 35),
-//                                   child: OutlinedButton(
-//                                     style: OutlinedButton.styleFrom(
-//                                       primary: Colors.black,
-//                                       backgroundColor:
-//                                           Color.fromARGB(255, 255, 255, 255),
-//                                     ),
-//                                     child: Row(
-//                                       mainAxisAlignment:
-//                                           MainAxisAlignment.center,
-//                                       children: [
-//                                         Icon(Icons.favorite_border , color: Color(0xFFEC441E)),
-//                                         SizedBox(width: 10,height: 50,), 
-//                                         Text('Save This Trip',
-//                                         style: TextStyle(
-//                                           color: Color(0xFFEC441E),
-//                                         ),),
-//                                       ],
-//                                     ),
-//                                      onPressed: () {
-//                                       // Create a new list to store the selected flights
-//                                       List<Flight> selectedFlightsToSave = List.from(SelectedFlights.selectedFlights);
-
-//                                       // Add the selected flights to SaveFlights
-//                                       SaveFlights.addSaveFlight(selectedFlightsToSave);
-
-//                                       // Clear the selected flights list
-//                                       SelectedFlights.selectedFlights.clear();
-
-//                                       // Verify that the lists are not connected
-//                                       print("Selected Flights after clearing: ${SelectedFlights.selectedFlights}");
-//                                       print("Saved Flights: ${SaveFlights.saveFlights}");
-
-//                                       // Navigate to the TripScreen
-//                                       Navigator.push(
-//                                         context,
-//                                         MaterialPageRoute(
-//                                           builder: (context) => TripScreen(),
-//                                         ),
-//                                       );
-//                                     },
-//                                   ),
-//                                 ),
-//                   // Add more widgets as needed
-//                 ],
-//               ),
-//             ),
-//             ],
-//           ),
-//         )
-//         ),
-//     );
-            
-//   }
-
-
-// }

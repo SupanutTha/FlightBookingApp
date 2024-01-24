@@ -39,22 +39,17 @@ class _ToggleButtonsTripState extends State<ToggleButtonsTrip> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           const SizedBox(height: 10),
-          // This ToggleButtons allows multiple or no selection.
           ToggleButtons(
-            // ToggleButtons uses a List<bool> to track its selection state.
             isSelected: List.generate(tripOptions.length, (index) => index == _selectedOptionIndex),
-            // This callback return the index of the child that was pressed.
             onPressed: (int index) {
               setState(() {
                 _selectedOptionIndex = index;
               });
             },
-            // Constraints are used to determine the size of each child widget.
             constraints: const BoxConstraints(
               minHeight: 32.0,
               minWidth: 56.0,
             ),
-            // ToggleButtons uses a List<Widget> to build its children.
             children: tripOptions
                 .map(((TripOption, String) trip) => Text(trip.$2))
                 .toList(),

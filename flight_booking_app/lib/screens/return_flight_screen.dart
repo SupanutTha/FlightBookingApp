@@ -1,17 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flight_booking_app/models/flight.dart';
-import 'package:flight_booking_app/models/flight_search_data.dart';
-import 'package:flight_booking_app/utilities/api_service.dart';
 import 'package:flight_booking_app/widgets/chip_select.dart';
 import 'package:flutter/material.dart';
 import 'package:flight_booking_app/widgets/suggest_list/flight_suggest_list.dart';
-import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flight_booking_app/models/selected_flights.dart';
-
-import '../widgets/popup/flightDetailPopUp.dart';
-import '../widgets/xen_popup_card.dart';
 
 class ReturnFlight extends StatefulWidget{
   final returnFlight; // retrive data form flight_search_data

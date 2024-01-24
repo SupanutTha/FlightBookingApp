@@ -1,4 +1,3 @@
-import 'package:flight_booking_app/models/flight.dart';
 import 'package:flutter/material.dart';
 import 'package:another_stepper/another_stepper.dart';
 import 'package:flight_booking_app/utilities/database_helper.dart';

@@ -2,21 +2,12 @@
 
 import 'package:flight_booking_app/models/save_flight.dart';
 import 'package:flight_booking_app/models/flight.dart';
-import 'package:flight_booking_app/models/flight_search_data.dart';
-import 'package:flight_booking_app/models/save_flight.dart';
 import 'package:flight_booking_app/models/selected_flights.dart';
 import 'package:flight_booking_app/screens/home_screen.dart';
-import 'package:flight_booking_app/screens/trip_summary2.dart';
 import 'package:flight_booking_app/screens/trip_summary_extre.dart';
-import 'package:flight_booking_app/utilities/api_service.dart';
 import 'package:flight_booking_app/utilities/database_helper.dart';
-import 'package:flight_booking_app/widgets/chip_select.dart';
-import 'package:flight_booking_app/widgets/suggest_list/flight_detail_list.dart';
-import 'package:flight_booking_app/widgets/suggest_list/summary_list.dart';
 import 'package:flutter/material.dart';
-import 'package:flight_booking_app/widgets/suggest_list/flight_suggest_list.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 
 
 class TripScreen extends StatefulWidget{
@@ -40,7 +31,7 @@ class _TripScreenState extends State<TripScreen>{
         // Navigate to the home page
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => HomePage(), // Replace 'HomeScreen' with the actual name of your home page.
+            builder: (context) => HomePage(),
           ),
         );
       }

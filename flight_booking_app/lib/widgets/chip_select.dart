@@ -51,23 +51,17 @@ class _ActionChoiceExampleState extends State<ActionChoiceExample> {
   }
 
   List<Flight> _sortResultsByFastest(List<Flight> searchResults) {
-    // Implement your sorting logic for fastest flights here
-    // This function should return a sorted list based on the selected option
     searchResults.sort((a, b) => a.itineraries[0]['duration'].compareTo(b.itineraries[0]['duration']));
     return searchResults;
   }
 
   List<Flight> _sortResultsByCheapest(List<Flight> searchResults) {
-    // Implement your sorting logic for cheapest flights here
-    // This function should return a sorted list based on the selected option
     searchResults.sort((a, b) =>
         a.price['grandTotal'].compareTo(b.price['grandTotal']));
     return searchResults;
   }
 
   List<Flight> _filterDirectFlights(List<Flight> searchResults) {
-    // Implement your filtering logic for direct flights here
-    // This function should return a filtered list based on the selected option
      searchResults = searchResults.where((flight) =>
         flight.itineraries[0]['segments'].length == 1).toList();
     return searchResults;

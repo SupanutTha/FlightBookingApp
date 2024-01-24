@@ -1,8 +1,3 @@
-import 'package:flight_booking_app/models/flight.dart';
-import 'package:flight_booking_app/models/selected_flights.dart';
-import 'package:flight_booking_app/screens/return_flight_screen.dart';
-import 'package:flight_booking_app/screens/summary_screen.dart';
-import 'package:flight_booking_app/screens/trip_summary2.dart';
 import 'package:flight_booking_app/widgets/suggest_list/flight_detail_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flight_booking_app/utilities/database_helper.dart';

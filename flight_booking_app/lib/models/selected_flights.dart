@@ -1,4 +1,4 @@
-import 'flight.dart'; // Assuming you have a Flight class defined
+import 'flight.dart';
 
 class SelectedFlights {
   static List<Flight> _selectedFlights = [];
