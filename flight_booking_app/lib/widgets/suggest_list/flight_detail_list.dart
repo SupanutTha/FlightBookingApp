@@ -76,7 +76,7 @@ class FlightDetailList extends StatelessWidget {
             StepperWidget(flight: segment,),
           ],
         ),
-      ), // Add some margin for spacing
+      ), 
     );
   }
 }

@@ -48,7 +48,7 @@ class _SearchFlightPopUpState extends State<SearchFlightPopUp> {
             CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  expandedHeight: 100, // Adjust the height as needed
+                  expandedHeight: 100, 
                   floating: false,
                   pinned: true,
                   backgroundColor: Colors.white,
@@ -105,7 +105,6 @@ class _SearchFlightPopUpState extends State<SearchFlightPopUp> {
                 ),
               ),
                 ),
-                // Add other Sliver widgets here
               ],
             ),
             Positioned(

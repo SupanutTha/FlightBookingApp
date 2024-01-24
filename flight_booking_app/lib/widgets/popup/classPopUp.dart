@@ -138,9 +138,9 @@ class _ClassPopUpState extends State<ClassPopUp> {
 
   Widget buildDivider() {
     return Divider(
-      color: Colors.grey, // You can customize the color of the line
-      thickness: 0.3, // You can customize the thickness of the line
-      height: 0.0, // You can customize the height of the line
+      color: Colors.grey,
+      thickness: 0.3, 
+      height: 0.0, 
     );
   }
 }

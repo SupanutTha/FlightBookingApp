@@ -39,7 +39,7 @@ class  _SingleDatePickPopUpState extends State<SingleDatePickPopUp> {
           CustomScrollView(
             slivers: [
               SliverAppBar(
-                expandedHeight: 100, // Adjust the height as needed
+                expandedHeight: 100,
                 floating: false,
                 pinned: true,
                 backgroundColor: Colors.white,
@@ -53,7 +53,7 @@ class  _SingleDatePickPopUpState extends State<SingleDatePickPopUp> {
                 backgroundColor: Colors.white,
                 title: Container(
                 alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(1.0), // Add padding for the border
+                padding: EdgeInsets.all(1.0),
                 child: Column(
                   children: [
                     Text("Select date       ", style: TextStyle(

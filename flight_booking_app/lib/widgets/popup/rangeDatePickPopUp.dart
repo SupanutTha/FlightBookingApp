@@ -51,7 +51,7 @@ class  _RangeDatePickPopUpState extends State<RangeDatePickPopUp> {
           CustomScrollView(
             slivers: [
               SliverAppBar(
-                expandedHeight: 100, // Adjust the height as needed
+                expandedHeight: 100,
                 floating: false,
                 pinned: true,
                 backgroundColor: Colors.white,
@@ -65,7 +65,7 @@ class  _RangeDatePickPopUpState extends State<RangeDatePickPopUp> {
                 backgroundColor: Colors.white,
                 title: Container(
                 alignment: Alignment.centerLeft,
-                padding: EdgeInsets.all(1.0), // Add padding for the border
+                padding: EdgeInsets.all(1.0), 
                 child: Row(
                   children: [
                     Expanded(
@@ -127,7 +127,6 @@ class  _RangeDatePickPopUpState extends State<RangeDatePickPopUp> {
               ),
             ),
               ),
-              // Add other Sliver widgets here
             ],
           ),
           Positioned(
@@ -197,7 +196,7 @@ class  _RangeDatePickPopUpState extends State<RangeDatePickPopUp> {
                                         Text(
                                           'Please select return dates',
                                           style: TextStyle(
-                                            color: Colors.red, // You can change the color to your preference
+                                            color: Colors.red, 
                                           ),
                                         )
                                      

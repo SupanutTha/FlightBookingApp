@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
         // Navigate to the home page
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => TripScreen(), // Replace 'HomeScreen' with the actual name of your home page.
+            builder: (context) => TripScreen(), 
           ),
         );
       }
@@ -129,11 +129,9 @@ class _HomePageState extends State<HomePage> {
           elevation: 0.0,
           actions: []),
       //body
-      body: // Figma Flutter Generator HomeWidget - FRAME
+      body: 
           Container( //all screan
               decoration: BoxDecoration( // oreange header
-                // middle box
-                //color : Color.fromRGBO(255, 193, 169, 0.843137264251709),
                 color: const Color(0xFFEC441E),
               ),
               child: Stack(children: <Widget>[
@@ -456,7 +454,7 @@ class _HomePageState extends State<HomePage> {
                                 fontFamily: 'Amiri Quran Colored',
                                 fontSize: 35,
                                 letterSpacing:
-                                    0 /*percentages not used in flutter. defaulting to zero*/,
+                                    0 ,
                                 fontWeight: FontWeight.normal,
                                 height: 1.125),
                           ),
@@ -469,7 +467,7 @@ class _HomePageState extends State<HomePage> {
                               fontFamily: 'Amiri Quran Colored',
                               fontSize: 35,
                               letterSpacing:
-                                  0 /*percentages not used in flutter. defaulting to zero*/,
+                                  0 ,
                               fontWeight: FontWeight.normal,
                               height: 1.125),
                         ),

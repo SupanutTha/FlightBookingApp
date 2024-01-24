@@ -13,7 +13,7 @@ class ApiService {
       final clientId = 'PBjFEhvGHXAzDb6blW0BRCcORKTiZKMj';
       final clientSecret = '4Pf1CUcDoTBgL5DB';
       // print("check token"); 
-      final response = await http.post( // call api for amadeus to gain acess token
+      final response = await http.post( // call api for amadeus to gain access token
         Uri.parse('$tokenUrl'),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -48,7 +48,7 @@ class ApiService {
     final dateFormatter = DateFormat('yyyy-MM-dd'); // set format date
     //print(searchData.getEffectiveDate()!); // check that what date data is available 
     final departureDate = dateFormatter.format(searchData.departureDate!); // change format date
-    final maxFlights = 50; // Set the maximum number of flight results to display .now recommend 2 is maximun if set maximum more than it can search it gonna bug it list
+    final maxFlights = 50; // Set the maximum number of flight results to display 
 
     // 1. Search for outbound flights
     final outboundResponse = await http.get(
@@ -85,7 +85,6 @@ class ApiService {
 
 
       // check that it dont add flight in list more than maximum
-      // it not working propaly if the flight that can search less than maximum = bug ;-;
       if (numOutboundResults > maxFlights) {
         outboundFlightData = outboundFlightData.sublist(0, maxFlights); // Take only the first 'max' flight results
       }

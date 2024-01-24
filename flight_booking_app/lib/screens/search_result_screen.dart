@@ -9,7 +9,7 @@ import 'package:flight_booking_app/widgets/suggest_list/flight_suggest_list.dart
 import 'package:lottie/lottie.dart';
 
 class ResultPage extends StatefulWidget{
-  final FlightSearchData searchData; // retrive data form flight_search_data
+  final FlightSearchData searchData; // retrieve data form flight_search_data
 
   ResultPage({required this.searchData});
 

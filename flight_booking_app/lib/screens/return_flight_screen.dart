@@ -8,7 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:flight_booking_app/models/selected_flights.dart';
 
 class ReturnFlight extends StatefulWidget{
-  final returnFlight; // retrive data form flight_search_data
+  final returnFlight; // retrieve data form flight_search_data
 
   ReturnFlight({required this.returnFlight});
 
@@ -54,7 +54,7 @@ class _ReturnFlightState extends State<ReturnFlight>{
               CustomScrollView(
                 slivers: [
                   SliverAppBar(
-                    expandedHeight: 100, // Adjust the height as needed
+                    expandedHeight: 100,
                     floating: false,
                     pinned: true,
                     backgroundColor: Colors.white,

@@ -37,7 +37,7 @@ class _SummaryFlightExtraState extends State<SummaryFlightExtra>{
   } else if (numberOfSelectedFlights > 1) {
     return 'return';
   } else {
-    return ''; // Handle other cases as needed
+    return ''; 
   }
 }
   double price = 0;
@@ -167,7 +167,6 @@ class _SummaryFlightExtraState extends State<SummaryFlightExtra>{
                         Text('${SelectedFlights.selectedFlights[0].travelerPricings[0]['fareDetailsBySegment'][0]['cabin'].toString().toLowerCase()} class'),
                       ],
                     ),
-                  // You can add other widgets above your list if needed
                  ],
                 ),
               ),
@@ -187,12 +186,11 @@ class _SummaryFlightExtraState extends State<SummaryFlightExtra>{
               ),
               Container(
                 width: 500,
-                color: Color(0xFFEC441E), // Customize the background color
+                color: Color(0xFFEC441E), 
                 padding: EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  // Add your bottom section content here
                   Column(
                     children: [
                       Align(

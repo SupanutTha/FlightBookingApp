@@ -37,23 +37,13 @@ class _SummaryFlight2State extends State<SummaryFlight2>{
   } else if (numberOfSelectedFlights > 1) {
     return 'return';
   } else {
-    return ''; // Handle other cases as needed
+    return ''; 
   }
 }
   double price = 0;
   RegExp regExp = RegExp(r'(\d+\.\d+)');
   @override
   Widget build(BuildContext context) {
-    //print(SelectedFlights.selectedFlights);
-    // Match match = regExp.firstMatch(SelectedFlights.selectedFlights[0].price.toString());
-    // if (match != null) {
-    //   // Extracted numeric value from the match
-    //   String numericValue = match.group(0);
-    //   price = double.parse(numericValue);
-    // } else {
-    //   // Handle the case where no numeric value was found
-    //   price = 0.0; // Or any other default value you prefer
-    // }
 
     if (SelectedFlights.selectedFlights.length == 2){
       price = double.parse(SelectedFlights.selectedFlights[0].price['total'].toString()) + double.parse(SelectedFlights.selectedFlights[1].price['total'].toString());
@@ -83,7 +73,6 @@ class _SummaryFlight2State extends State<SummaryFlight2>{
         body: Center(
           child: Column(
             crossAxisAlignment:CrossAxisAlignment.center,
-           // mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(height: 20,),
               Container(
@@ -175,7 +164,6 @@ class _SummaryFlight2State extends State<SummaryFlight2>{
                         Text('${SelectedFlights.selectedFlights[0].travelerPricings[0]['fareDetailsBySegment'][0]['cabin'].toString().toLowerCase()} class'),
                       ],
                     ),
-                  // You can add other widgets above your list if needed
                  ],
                 ),
               ),
@@ -195,12 +183,11 @@ class _SummaryFlight2State extends State<SummaryFlight2>{
               ),
               Container(
                 width: 500,
-                color: Color(0xFFEC441E), // Customize the background color
+                color: Color(0xFFEC441E),
                 padding: EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  // Add your bottom section content here
                   Column(
                     children: [
                       Align(
@@ -213,7 +200,7 @@ class _SummaryFlight2State extends State<SummaryFlight2>{
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          '€ ${price.toString()}',
+                          '\$ ${price.toString()}',
                           style: TextStyle(fontSize: 25,color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -237,7 +224,7 @@ class _SummaryFlight2State extends State<SummaryFlight2>{
                             ),
                             SizedBox(width: 10, height: 50,),
                             Text(
-                              isTripSaved ? 'Unsave This Trip' : 'Save This Trip',
+                              isTripSaved ? 'Unsaved This Trip' : 'Save This Trip',
                               style: TextStyle(
                                 color: Color(0xFFEC441E),
                               ),
