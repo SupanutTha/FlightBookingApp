@@ -8,3 +8,5 @@ Flight Booking App is project that use to study flutter, designed to discover fl
 - **Flight Search:** Find the flight by specifying destination, flight class, and passenger count. Explore various filter options for a search experience.
 - **Detailed Flight Results:** Get a comprehensive overview of search results, including direct flights, connecting flights, and customizable sorting for personalized preferences.
 - **Flexible Booking Options:** Choose between one-way or round-trip flights with ease. Save favorite flights for quick access to preferred options.
+
+** This repository build base on Iphone device.
