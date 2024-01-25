@@ -45,7 +45,7 @@ class _FlightDetailPopUpState extends State<FlightDetailPopUp> {
       ),
       body: Column(
         children: [
-          Row(
+          Row( // Flight departure -> Arrival
             children: [
               SizedBox(height: 50),
               Expanded(
@@ -126,7 +126,7 @@ class _FlightDetailPopUpState extends State<FlightDetailPopUp> {
                   waitingTime = '${difference.inHours}h ${difference.inMinutes.remainder(60)}m';
                 }
 
-                return Column(
+                return Column( // connection time
                   children: [
                     FlightDetailList(
                       segment: segment,

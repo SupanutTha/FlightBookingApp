@@ -385,6 +385,14 @@ Future<String> findCityAndCountry(String iata) async {
   }
 }
 
+      String formatDuration(String durationString) {
+      final hours = RegExp(r'(\d+)H').firstMatch(durationString)?.group(1) ?? '0';
+      final minutes = RegExp(r'(\d+)min').firstMatch(durationString)?.group(1) ?? '0';
 
+      final formattedHours = hours.isNotEmpty ? '$hours hr' : '';
+      final formattedMinutes = minutes.isNotEmpty ? '$minutes min' : '';
+
+      return '$formattedHours${formattedHours.isNotEmpty && formattedMinutes.isNotEmpty ? ' ' : ''}$formattedMinutes';
+    }
 }
 

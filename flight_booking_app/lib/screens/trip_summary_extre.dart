@@ -203,7 +203,7 @@ class _SummaryFlightExtraState extends State<SummaryFlightExtra>{
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          '€ ${price.toString()}',
+                          '\$ ${price.toStringAsFixed(2)}',
                           style: TextStyle(fontSize: 25,color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),

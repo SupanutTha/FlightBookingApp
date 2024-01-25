@@ -93,7 +93,10 @@ class SummaryFlightList extends StatelessWidget {
                     },
                   ),
                 ),
-                Expanded(flex: 1, child: Text(calculateDuration(departureTime, arrivalTime))),
+                Expanded(flex: 1, child: Text(
+                  //calculateDuration(departureTime, arrivalTime)
+                  dbHelper.formatDuration(duration)
+                  )),
               ],
             ),
             Row(

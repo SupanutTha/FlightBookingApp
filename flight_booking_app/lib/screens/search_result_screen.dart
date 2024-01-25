@@ -62,7 +62,7 @@ class _ResultPageState extends State<ResultPage>{
             CustomScrollView(
               slivers: [
                 SliverAppBar(
-                  expandedHeight: 100, // Adjust the height as needed
+                  expandedHeight: 100, 
                   floating: false,
                   pinned: true,
                   backgroundColor: Colors.white,

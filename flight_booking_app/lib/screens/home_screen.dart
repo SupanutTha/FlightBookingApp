@@ -131,11 +131,11 @@ class _HomePageState extends State<HomePage> {
       //body
       body: 
           Container( //all screan
-              decoration: BoxDecoration( // oreange header
+              decoration: BoxDecoration( // orange header
                 color: const Color(0xFFEC441E),
               ),
               child: Stack(children: <Widget>[
-                Positioned( // big whrite box
+                Positioned( // big white box
                     top: 150,
                     child: Container( // white box
                       width: 430,

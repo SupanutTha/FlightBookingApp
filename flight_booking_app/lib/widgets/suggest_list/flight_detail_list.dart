@@ -14,7 +14,6 @@ class FlightDetailList extends StatelessWidget {
 
   final dbHelper = DatabaseHelper.instance;
  
-
   @override
   Widget build(BuildContext context) {
 
@@ -135,7 +134,8 @@ class StepperWidget extends StatelessWidget {
               ),
               StepperData(
                 title: StepperText(
-                calculateDuration( flight['departure']['at'],flight['arrival']['at']),
+                  dbHelper.formatDuration(flight['duration']),
+                //calculateDuration( flight['departure']['at'],flight['arrival']['at']),
                   textStyle: const TextStyle(
                     color: Colors.black87,
                   ),

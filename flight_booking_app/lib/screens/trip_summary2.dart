@@ -200,7 +200,7 @@ class _SummaryFlight2State extends State<SummaryFlight2>{
                       Align(
                         alignment: Alignment.bottomRight,
                         child: Text(
-                          '\$ ${price.toString()}',
+                          '\$ ${price.toStringAsFixed(2)}',
                           style: TextStyle(fontSize: 25,color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                       ),
