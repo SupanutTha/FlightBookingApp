@@ -38,8 +38,8 @@ class SummaryFlightList extends StatelessWidget {
     String arrivalTime = segments[connectingFlight - 1]['arrival']['at'];
 
     return Container(
-      width: 400,
-      height: 210,
+      width: 414,
+      height: 218,
       decoration: BoxDecoration( 
           borderRadius : BorderRadius.only(
             topLeft: Radius.circular(15),
@@ -72,7 +72,7 @@ class SummaryFlightList extends StatelessWidget {
                     future: dbHelper.findLogo(carrierCode),
                     builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
+                        return SizedBox(child: CircularProgressIndicator());
                       } else if (snapshot.hasError || snapshot.data == 'Unknown') {
                         // Handle the case where there's an error or the logo is unknown.
                         return Text("Unknown airline");
@@ -204,20 +204,22 @@ class SummaryFlightList extends StatelessWidget {
               ],
             ),
             Divider(),
-            TextButton(
-              onPressed: () async {
-                await showDialog(
-                  context: context,
-                  builder: (builder) => XenPopupCard(
-                  body: FlightDetailPopUpSummary(
-                    flight: flight,
-                    returnFlight: flight
-                    ),
-                    ),
-                  );
-                 
-              },
-              child: Text('View detail',style: TextStyle(color:Color(0xFFEC441E) ),))
+            Expanded(
+              child: TextButton(
+                onPressed: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (builder) => XenPopupCard(
+                    body: FlightDetailPopUpSummary(
+                      flight: flight,
+                      returnFlight: flight
+                      ),
+                      ),
+                    );
+                   
+                },
+                child: Text('View detail',style: TextStyle(color:Color(0xFFEC441E) ),)),
+            )
           ],
         ),
       ),

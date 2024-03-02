@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "flight_booking_app",
+            "cwd": "flight_booking_app",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "flight_booking_app (profile mode)",
+            "cwd": "flight_booking_app",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "flight_booking_app (release mode)",
+            "cwd": "flight_booking_app",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

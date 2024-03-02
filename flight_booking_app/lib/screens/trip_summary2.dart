@@ -181,7 +181,7 @@ class _SummaryFlight2State extends State<SummaryFlight2>{
                 },
               ),
               ),
-              Container(
+              Container( // bottom bar
                 width: 500,
                 color: Color(0xFFEC441E),
                 padding: EdgeInsets.all(16),

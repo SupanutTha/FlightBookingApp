@@ -88,9 +88,9 @@ class _SummaryFlightExtraState extends State<SummaryFlightExtra>{
                   ),
                   borderRadius: BorderRadius.all(Radius.circular(12)),
                 ),
-                child: Column(
+                child: Column( // top widget
                   children: [
-                    Row( // desination
+                    Row( // desination 
                       children: [
                         Expanded(
                           flex: 1,

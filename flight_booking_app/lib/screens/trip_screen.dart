@@ -56,7 +56,7 @@ class _TripScreenState extends State<TripScreen>{
                     ),
         ),
       body: Center(
-        child: Expanded(
+  
                 child: ListView.builder(
                 itemCount: SaveFlights.saveFlights.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -168,7 +168,7 @@ class _TripScreenState extends State<TripScreen>{
                   );
                 },
               ),
-              ),
+              
         ),
        bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
